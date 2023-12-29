@@ -101,9 +101,7 @@ Tracker.autorun(() => {
                         }
                         return true;
                     });
-                    //console.debug( 'pck', pck );
-                    //console.debug( 'global', global );
-                    //console.debug( 'conf', conf );
+                    //console.debug( 'calling', pck, global+'.configure() with', conf );
                     Package[pck][global].configure( conf );
                 }
             }

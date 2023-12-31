@@ -90,7 +90,6 @@ export class EntityChecker {
             }
         });
 
-        //console.debug( this );
         return this;
     }
 

@@ -20,18 +20,24 @@
 import './coreErrorMsg.html';
 import './coreErrorMsg.less';
 
+Template.coreErrorMsg.onRendered( function(){
+    this.autorun(() => {
+        //console.debug( 'errorsSet', Template.currentData().errorsSet );
+    });
+});
+
 Template.coreErrorMsg.helpers({
     // the content of the error message as a simple string (not HTML)
     //  because we do not want have several lines, or bold, or any other singularities here
     //  nevertheless the Blaze tempate itself is HTML-capable to be able to handle the '&nbsp;' character
     errorLabel(){
-        const o = this.errorsSet.lastError();
+        const o = this.errorsSet?.lastError();
         return o ? o.label() : '&nbsp;';
     },
 
     // the class to be associated to the error message: may be an error, a warning, an info, etc.
     errorType(){
-        const o = this.errorsSet.lastError();
+        const o = this.errorsSet?.lastError();
         return o ? o.type() : '';
     }
 });

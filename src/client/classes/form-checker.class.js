@@ -408,21 +408,37 @@ export class FormChecker {
      *  - display: if set, then says whether checks have any effect on the display, defaulting to true
      *  - msgerr: if set, says if error message are to be displayed, defaulting to true
      *  - update: if set, then says whether the value found in the form should update the edited object, defaulting to true
+     *  - $parent: if set, a jQuery element which acts as the parent of the form
      * @returns a Promise which eventually resolves to the global validity status
      */
     check( opts={} ){
         let valid = true;
         let promises = [];
         const self = this;
-        this._fieldsIterate(( args, f, defn, parent ) => {
-            const $js = defn.js ? self.#priv.instance.$( defn.js ) : null;
-            const eltData = $js.length === 1 ? $js.data( 'form-checker' ) : null;
-            if( eltData ){
-                promises.push( self[ eltData.fn ]( eltData, opts )
-                    .then(( v ) => {
-                        valid = valid && v;
-                    })
-                );
+        this._fieldsIterate(( args, field, defn, parent ) => {
+            if( defn.js ){
+                let $js = null;
+                if( opts.$parent ){
+                    $js = opts.$parent.find( defn.js );
+                } else {
+                    $js = self.#priv.instance.$( defn.js );
+                }
+                if( $js && $js.length === 1 ){
+                    eltData = $js.data( 'form-checker' );
+                    if( !eltData ){
+                        this._domDataSet( $js, field, defn, parent );
+                        eltData = $js.data( 'form-checker' );
+                    }
+                    if( eltData ){
+                        promises.push( self[ eltData.fn ]( eltData, opts )
+                            .then(( v ) => {
+                                valid = valid && v;
+                            })
+                        );
+                    } else {
+                        Meteor.isDevelopment && console.warn( field, 'eltData not set' );
+                    }
+                }
             }
             return true;
         });
@@ -491,6 +507,7 @@ export class FormChecker {
      * @param {Object} opts an options object with following keys:
      *  - id: in case of array'ed fields, the id of the item
      *  - $parent: in case of dynamic fields, a DOM jQuery element which is a parent of this form
+     *  - autorun_check: whether the application already has a check() in an autorun, so that global re-check() here would be useless, defaulting to true
      * 
      * The principle is that:
      * 1. we check the input field identified by its selector
@@ -515,11 +532,10 @@ export class FormChecker {
             event.originalEvent['FormChecker'] = { handled: true };
             return this[ o.fn ]( o, opts )
                 .then(( valid ) => {
-                    if( valid ){
+                    if( valid && opts.autorun_check !== false ){
                         return this.check({ field: o.field, update: false });
-                    } else {
-                        return false;
                     }
+                    return valid;
                 });
         }
     }
@@ -551,7 +567,7 @@ export class FormChecker {
     /**
      * @summary initialize the form with the given data
      * @param {Object} item
-     * @param {Object} opts an option object with folowing keys:
+     * @param {Object} opts an option object with following keys:
      *  $parent: when set, the DOM parent of the targeted form - in case of an array
      */
     setForm( item, opts={} ){
@@ -575,6 +591,35 @@ export class FormChecker {
                     } else {
                         Meteor.isDevelopment && console.warn( field, 'eltData not set' );
                     }
+                }
+            }
+            return true;
+        };
+        this._fieldsIterate( cb );
+    }
+
+    /**
+     * @summary initialize the elements DOM data in case of a dynamic form
+     * @param {Object} opts an option object with following keys:
+     *  $parent: when set, the DOM parent of the targeted form - in case of an array
+     */
+    setupDom( opts={} ){
+        const self = this;
+        const cb = function( args, field, defn, parent ){
+            if( defn.js ){
+                let $js = null;
+                if( opts.$parent ){
+                    $js = opts.$parent.find( defn.js );
+                } else {
+                    $js = self.#priv.instance.$( defn.js );
+                }
+                if( $js && $js.length === 1 ){
+                    eltData = $js.data( 'form-checker' );
+                    if( !eltData ){
+                        this._domDataSet( $js, field, defn, parent );
+                    }
+                    opts.update = false;
+                    this.check( opts );
                 }
             }
             return true;

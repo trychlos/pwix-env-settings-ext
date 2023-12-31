@@ -123,4 +123,11 @@ export class EntityChecker {
             this.#priv.errSetFn( tm.message());
         }
     }
+
+    /**
+     * @returns {MessageSet} the error messages set object instance
+     */
+    getErrorsSet(){
+        return this.#priv.errorsSet;
+    }
 }

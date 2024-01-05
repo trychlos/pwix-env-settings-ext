@@ -21,7 +21,8 @@ if( Meteor.isServer ){
         // return an object { env, settings } containing the server settings available for the current environment
         'settings.environment'(){
             if( !Object.keys( process.env ).includes( 'APP_ENV' )){
-                console.warn( 'process.env.APP_ENV is unset' );
+                console.warn( 'process.env.APP_ENV is unset (but should)' );
+                return {};
             }
             const env = process.env.APP_ENV || Meteor.settings.runtime.env;
             const o = {
@@ -37,7 +38,7 @@ if( Meteor.isServer ){
 //
 // Setup a copy of the server settings for this running environment, available on both the client and the server.
 // 
-// Note that the Meteor.APP.environmentSettings ReactiveVar is initialized to null at init time.
+// Note that the Meteor.APP.envSettings ReactiveVar is initialized to null at init time.
 // It is then set as the result of an asynchronous method call on client side; the result may thus be delayed.
 // Use of this variable should so be done inside of an autorun() section, and be prepared to get a null value.
 //
@@ -49,7 +50,6 @@ Meteor.startup(() => {
         if( err ){
             console.error( err );
         } else {
-            //console.debug( 'environment settings received', res );
             CoreApp.envSettings.set( res );
         }
     });

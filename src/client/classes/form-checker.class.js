@@ -159,7 +159,7 @@ export class FormChecker {
         if( !data ){
             data = null;
             const cb = function( args, field, defn, parent ){
-                ( $target.attr( 'class' ).split( /\s+/ ) || [] ).every(( c ) => {
+                ( $target.attr( 'class' )?.split( /\s+/ ) || [] ).every(( c ) => {
                     const _selector = '.'+c;
                     const _words = defn.js.split( ' ' );
                     if( _words.includes( _selector )){

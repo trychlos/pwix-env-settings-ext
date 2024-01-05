@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/common/js/index.js
+ * pwix:core-app/src/common/js/index.js
  */
 
 import { MessagesSet } from '../classes/messages-set.class.js';
@@ -16,9 +16,9 @@ import './configure.js';
 import './env-settings.js';
 import './i18n.js';
 
-CoreUI.MessagesSet = MessagesSet;
-CoreUI.TypedMessage = TypedMessage;
+CoreApp.MessagesSet = MessagesSet;
+CoreApp.TypedMessage = TypedMessage;
 
-CoreUI.FieldCheck = FieldCheck;
-CoreUI.FieldType = FieldType;
-CoreUI.YesNo = YesNo;
+CoreApp.FieldCheck = FieldCheck;
+CoreApp.FieldType = FieldType;
+CoreApp.YesNo = YesNo;

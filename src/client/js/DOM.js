@@ -1,11 +1,11 @@
 /*
- * pwix:core-ui/src/client/js/DOM.js
+ * pwix:core-app/src/client/js/DOM.js
  */
 
 import _ from 'lodash';
 import ellipsize from 'ellipsize';
 
-CoreUI.DOM = {
+CoreApp.DOM = {
 
     // ellipsize a single line of text to fit into the width of the given container
     //  nb: when working in a table, caller should rather provide the header column as a container
@@ -40,7 +40,7 @@ CoreUI.DOM = {
     sameWidth( selectors ){
         let promises = [];
         selectors.every(( sel ) => {
-            promises.push( CoreUI.DOM.waitFor( sel ));
+            promises.push( CoreApp.DOM.waitFor( sel ));
             return true;
         });
         Promise.allSettled( promises )

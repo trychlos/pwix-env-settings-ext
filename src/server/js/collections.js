@@ -1,4 +1,4 @@
 /*
- * pwix:core-ui/src/server/js/collections.js
+ * pwix:core-app/src/server/js/collections.js
  */
 

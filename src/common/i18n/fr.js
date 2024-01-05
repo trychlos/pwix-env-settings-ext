@@ -1,9 +1,9 @@
 /*
- * pwix:core-ui/src/common/i18n/fr.js
+ * pwix:core-app/src/common/i18n/fr.js
  */
 
-CoreUI.i18n = {
-    ... CoreUI.i18n,
+CoreApp.i18n = {
+    ... CoreApp.i18n,
     ... {
         fr: {
             cookieslink: {

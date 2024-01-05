@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/client/components/coreErrorMsg/coreErrorMsg.js
+ * pwix:core-app/src/client/components/coreErrorMsg/coreErrorMsg.js
  *
  * Display the error message on the bottom of a edition (either modal or page) panel.
  * 
@@ -14,7 +14,7 @@
  *  - a companion component is able to display all current error/warning/infos messages.
  * 
  * Parms:
- *  - errorsSet: a CoreUI.MessagesSet object
+ *  - errorsSet: a CoreApp.MessagesSet object
  */
 
 import './coreErrorMsg.html';

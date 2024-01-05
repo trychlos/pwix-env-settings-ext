@@ -1,7 +1,7 @@
 /*
  * /src/common/classes/messages-set.class.js
  *
- * A set of CoreUI.TypedMessage's.
+ * A set of CoreApp.TypedMessage's.
  */
 
 import { Tracker } from 'meteor/tracker';

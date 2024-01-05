@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/common/definitions/field-check.def.js
+ * pwix:core-app/src/common/definitions/field-check.def.js
  */
 
 import { pwixI18n } from 'meteor/pwix:i18n';

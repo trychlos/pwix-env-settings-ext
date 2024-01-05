@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/server/js/check_npms.js
+ * pwix:core-app/src/server/js/check_npms.js
  */
 
 import { checkNpmVersions } from 'meteor/tmeasday:check-npm-versions';
@@ -17,5 +17,5 @@ checkNpmVersions({
     'ellipsize': '^0.5.1',
     'lodash': '^4.17.0'
 },
-    'pwix:core-ui'
+    'pwix:core-app'
 );

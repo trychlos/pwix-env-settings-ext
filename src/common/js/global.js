@@ -1,9 +1,9 @@
 /*
- * pwix:core-ui/src/common/js/global.js
+ * pwix:core-app/src/common/js/global.js
  */
 
 import { ReactiveVar } from 'meteor/reactive-var';
 
-CoreUI = {
+CoreApp = {
     envSettings: new ReactiveVar( null )
 };

@@ -75,7 +75,7 @@ export class EntityChecker {
             errSetFn: o.errSetFn || null,
             errClearFn: o.errClearFn || null,
             // our internal vars
-            errorsSet: new CoreUI.MessagesSet(),
+            errorsSet: new CoreApp.MessagesSet(),
             valid: new ReactiveVar( false )
         };
 

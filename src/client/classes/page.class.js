@@ -159,22 +159,22 @@ export class Page {
         check( name, String );
 
         this._checkStringOrArray( def, 'inMenus', [] );
-        this._checkString( def, 'menuIcon', CoreUI._conf.menuIcon );
+        this._checkString( def, 'menuIcon', CoreApp._conf.menuIcon );
         this._checkString( def, 'menuLabel' );
         this._checkStringOrArray( def, 'rolesAccess', [] );
-        this._checkStringOrArray( def, 'rolesEdit', [ CoreUI._conf.adminRole ] );
+        this._checkStringOrArray( def, 'rolesEdit', [ CoreApp._conf.adminRole ] );
         this._checkString( def, 'route' );
         this._checkString( def, 'template' );
         this._checkObjectOrFunction( def, 'templateParms' );
-        this._checkString( def, 'theme', CoreUI._conf.theme );
+        this._checkString( def, 'theme', CoreApp._conf.theme );
         this._checkBoolean( def, 'wantEditionSwitch', false );
 
         this._name = name;
         this._def = { ...def };
     
         // be verbose if asked for
-        if( CoreUI._conf.verbosity & CoreUI.C.Verbose.PAGE ){
-            console.log( 'pwix:core-ui defining \''+name+'\' page' );
+        if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+            console.log( 'pwix:core-app defining \''+name+'\' page' );
         }
 
         return this;

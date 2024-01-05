@@ -1,15 +1,15 @@
 Package.describe({
-    name: 'pwix:core-ui',
+    name: 'pwix:core-app',
     version: '1.0.0-rc',
     summary: 'Bootstrap-based core package for SPA/Web applications',
-    git: 'https://github.com/trychlos/pwix-core-ui.git',
+    git: 'https://github.com/trychlos/pwix-core-app.git',
     documentation: 'README.md'
 });
 
 Package.onUse( function( api ){
     configure( api );
     api.export([
-        'CoreUI'
+        'CoreApp'
     ]);
     api.mainModule( 'src/client/js/index.js', 'client' );
     api.mainModule( 'src/server/js/index.js', 'server' );
@@ -18,7 +18,7 @@ Package.onUse( function( api ){
 Package.onTest( function( api ){
     configure( api );
     api.use( 'tinytest' );
-    api.use( 'pwix:core-ui' );
+    api.use( 'pwix:core-app' );
     api.mainModule( 'test/js/index.js' );
 });
 
@@ -61,7 +61,7 @@ function configure( api ){
     ],
         'client'
     );
-    api.addFiles( 'src/client/stylesheets/core_ui.less', 'client', { isImport: true });
+    api.addFiles( 'src/client/stylesheets/core_app.less', 'client', { isImport: true });
 }
 
 // NPM dependencies are checked in /src/server/js/check_npms.js

@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/common/definitions/yesno.def.js
+ * pwix:core-app/src/common/definitions/yesno.def.js
  */
 
 import _ from 'lodash';

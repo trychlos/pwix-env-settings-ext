@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/common/js/env-settings.js
+ * pwix:core-app/src/common/js/env-settings.js
  *
  * Setup a copy of the server settings for this running environment, available on both the client and the server.
  * 
@@ -50,7 +50,7 @@ Meteor.startup(() => {
             console.error( err );
         } else {
             //console.debug( 'environment settings received', res );
-            CoreUI.envSettings.set( res );
+            CoreApp.envSettings.set( res );
         }
     });
 });
@@ -70,7 +70,7 @@ Meteor.startup(() => {
 //      }
 
 Tracker.autorun(() => {
-    const res = CoreUI.envSettings.get();
+    const res = CoreApp.envSettings.get();
     if( res && res.settings && res.settings.packages ){
         Object.keys( res.settings.packages ).every(( pck ) => {
             if( Object.keys( res.settings.packages[pck] ).includes( 'global' )){

@@ -67,8 +67,8 @@ export class PageCurrent {
             const id = Meteor.userId();
             if( id !== this._vars.user ){
                 // be verbose if asked for
-                if( CoreUI._conf.verbosity & CoreUI.C.Verbose.PAGE ){
-                    console.log( 'pwix:core-ui setting \''+id+'\' as current user' );
+                if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                    console.log( 'pwix:core-app setting \''+id+'\' as current user' );
                 }
                 this._vars.user = id;
                 this._vars.dep.changed();
@@ -81,8 +81,8 @@ export class PageCurrent {
                 const roles = Roles.current();
                 if( !_.isEqual( roles, this._vars.roles )){
                     // be verbose if asked for
-                    if( CoreUI._conf.verbosity & CoreUI.C.Verbose.PAGE ){
-                        console.log( 'pwix:core-ui setting current roles', roles );
+                    if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                        console.log( 'pwix:core-app setting current roles', roles );
                     }
                     this._vars.roles = roles;
                     this._vars.dep.changed();
@@ -113,14 +113,14 @@ export class PageCurrent {
             if( page instanceof Page ){
                 if( !this._vars.page || page.name() !== this._vars.page.name()){
                     // be verbose if asked for
-                    if( CoreUI._conf.verbosity & CoreUI.C.Verbose.PAGE ){
-                        console.log( 'pwix:core-ui setting current page', page.name());
+                    if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                        console.log( 'pwix:core-app setting current page', page.name());
                     }
                     this._vars.page = page;
                     this._vars.dep.changed();
 
-                } else if( CoreUI._conf.verbosity & CoreUI.C.Verbose.PAGE ){
-                    console.log( 'pwix:core-ui ignoring already set page', page.name());
+                } else if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                    console.log( 'pwix:core-app ignoring already set page', page.name());
                 }
             } else {
                 console.error( 'expected an instance of Page, found', page );

@@ -1,17 +1,17 @@
 /*
- * pwix:core-ui/src/common/js/configure.js
+ * pwix:core-app/src/common/js/configure.js
  */
 
 import _ from 'lodash';
 
-CoreUI._conf = {};
+CoreApp._conf = {};
 
-CoreUI._defaults = {
+CoreApp._defaults = {
     adminRole: 'APP_ADMINISTRATOR',
     menuIcon: 'fa-chevron-right',
     routePrefix: '/coreUI',
     theme: 't-page',
-    verbosity: CoreUI.C.Verbose.NONE
+    verbosity: CoreApp.C.Verbose.NONE
 };
 
 /**
@@ -20,17 +20,17 @@ CoreUI._defaults = {
  * @param {Object} o configuration options
  * @returns {Object} the package configuration
  */
-CoreUI.configure = function( o ){
+CoreApp.configure = function( o ){
     if( o && _.isObject( o )){
-        _.merge( CoreUI._conf, CoreUI._defaults, o );
+        _.merge( CoreApp._conf, CoreApp._defaults, o );
         // be verbose if asked for
-        if( CoreUI._conf.verbosity & CoreUI.C.Verbose.CONFIGURE ){
-            //console.log( 'pwix:core-ui configure() with', o, 'building', CoreUI._conf );
-            console.log( 'pwix:core-ui configure() with', o );
+        if( CoreApp._conf.verbosity & CoreApp.C.Verbose.CONFIGURE ){
+            //console.log( 'pwix:core-app configure() with', o, 'building', CoreApp._conf );
+            console.log( 'pwix:core-app configure() with', o );
         }
     }
     // also acts as a getter
-    return CoreUI._conf;
+    return CoreApp._conf;
 }
 
-_.merge( CoreUI._conf, CoreUI._defaults );
+_.merge( CoreApp._conf, CoreApp._defaults );

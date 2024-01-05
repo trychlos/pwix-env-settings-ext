@@ -1,8 +1,8 @@
 /*
- * pwix:core-ui/src/common/js/constants.js
+ * pwix:core-app/src/common/js/constants.js
  */
 
-CoreUI.C = {
+CoreApp.C = {
     // verbosity levels
     Verbose: {
         NONE: 0,
@@ -13,4 +13,4 @@ CoreUI.C = {
 
 // non exported variables
 
-I18N = 'pwix:core-ui:i18n:namespace';
+I18N = 'pwix:core-app:i18n:namespace';

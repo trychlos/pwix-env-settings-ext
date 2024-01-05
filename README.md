@@ -1,4 +1,4 @@
-# pwix:core-ui
+# pwix:core-app
 
 ## What is it ?
 
@@ -37,7 +37,7 @@ The layout is actually eventually computed from the current page and the current
 
 From our point of view:
 
-- `CoreUI` holds a default `l-app` layout, which can be configured.
+- `CoreApp` holds a default `l-app` layout, which can be configured.
 
 - Each page define its own layout, though if relies most often on the default layout.
 
@@ -45,39 +45,39 @@ These two steps are display-independant.
 
 ### Forms management
 
-`pwix:core-ui` provides classes to make easier the forms management.
+`pwix:core-app` provides classes to make easier the forms management.
 
 Each class may be used as is, and can also be derived by the application.
 
-- `CoreUI.FormChecker`
+- `CoreApp.FormChecker`
 
     A class to be instanciated (or derived) by each component which would take advantage of it.
 
 ### Pages management
 
-`pwix:core-ui` provides classes to manage the pages collection, the current page and the roles which may be associated with it.
+`pwix:core-app` provides classes to manage the pages collection, the current page and the roles which may be associated with it.
 
 Each class may be used as is, and can also be derived by the application.
 
-- `CoreUI.PagesCollection`
+- `CoreApp.PagesCollection`
 
-    The collection of defined `CoreUI.Page` as a singleton.
+    The collection of defined `CoreApp.Page` as a singleton.
 
-- `CoreUI.Page`
+- `CoreApp.Page`
 
     A page definition.
 
-- `CoreUI.PageCurrent`
+- `CoreApp.PageCurrent`
 
     The current page. Each method is itself a reactive data source.
 
 ### Settings management
 
-`pwix:core-ui` the settings dedicated to the current environment as the `CoreUI.envSettings` reactive var.
+`pwix:core-app` the settings dedicated to the current environment as the `CoreApp.envSettings` reactive var.
 
 ## Configuration
 
-The package's behavior can be configured through a call to the `CoreUI.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
+The package's behavior can be configured through a call to the `CoreApp.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
 
 Known configuration options are:
 
@@ -117,27 +117,27 @@ Known configuration options are:
 
     The accepted value can be any or-ed combination of following:
 
-    - `CoreUI.C.Verbose.NONE`
+    - `CoreApp.C.Verbose.NONE`
 
         Do not display any trace log to the console
 
-    - `CoreUI.C.Verbose.CONFIGURE`
+    - `CoreApp.C.Verbose.CONFIGURE`
 
-        Trace `CoreUI.configure()` calls and their result
+        Trace `CoreApp.configure()` calls and their result
 
-    - `CoreUI.C.Verbose.PAGE`
+    - `CoreApp.C.Verbose.PAGE`
 
         Trace changes on page and relevant authorizations
 
-Please note that `CoreUI.configure()` method should be called in the same terms both in client and server sides.
+Please note that `CoreApp.configure()` method should be called in the same terms both in client and server sides.
 
-Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `CoreUI.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
+Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `CoreApp.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
 
 ## Provides
 
-`CoreUI` provides following items:
+`CoreApp` provides following items:
 
-### `CoreUI.envSettings`
+### `CoreApp.envSettings`
 
 A ReactiveVar which is set at startup with the settings for this environment. It contains following keys:
 
@@ -146,7 +146,7 @@ A ReactiveVar which is set at startup with the settings for this environment. It
 
 ### Methods
 
-#### `CoreUI.i18n.namespace()`
+#### `CoreApp.i18n.namespace()`
 
 Returns the i18n namespace used by the package. Used to add translations at runtime.
 
@@ -168,7 +168,7 @@ Display an indicator about the validity status of a field.
 
 Parameters:
 
-- type: a `CoreUI.FieldCheck` constant as `INVALID`, `NONE`, `UNCOMPLETE` or `VALID`.
+- type: a `CoreApp.FieldCheck` constant as `INVALID`, `NONE`, `UNCOMPLETE` or `VALID`.
 
 #### `coreFieldTypeIndicator`
 
@@ -176,7 +176,7 @@ Display an indicator about the type of a field.
 
 Parameters:
 
-- type: a `CoreUI.FieldType` constant as `INFO`, `SAVE` or `WORK`
+- type: a `CoreApp.FieldType` constant as `INFO`, `SAVE` or `WORK`
 - classes: if set, a list of classes to be added to the default ones.
 
 #### `coreGDPRLink`
@@ -235,11 +235,11 @@ Each of these dependencies should be installed at application level:
 
 ## Translations
 
-New and updated translations are willingly accepted, and more than welcome. Just be kind enough to submit a PR on the [Github repository](https://github.com/trychlos/pwix-core-ui/pulls).
+New and updated translations are willingly accepted, and more than welcome. Just be kind enough to submit a PR on the [Github repository](https://github.com/trychlos/pwix-core-app/pulls).
 
 ## Cookies and comparable technologies
 
-`pwix:core-ui` may use `localStorage` to record ...
+`pwix:core-app` may use `localStorage` to record ...
 
 Because this is dynamically done on a per dialog basis, and only on the caller request, the package doesn't advertize of this use, relying on the caller own declaration.
 

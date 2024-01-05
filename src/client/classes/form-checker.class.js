@@ -36,10 +36,10 @@ export class FormChecker {
         let check = 'NONE';
         if( err ){
             switch( err.type()){
-                case CoreUI.TypedMessage.C.ERROR:
+                case CoreApp.TypedMessage.C.ERROR:
                     check = 'INVALID';
                     break;
-                case CoreUI.TypedMessage.C.WARNING:
+                case CoreApp.TypedMessage.C.WARNING:
                     check = 'UNCOMPLETE';
                     break;
             }
@@ -79,7 +79,7 @@ export class FormChecker {
         if( this.#priv.validfn ){
             valid = this.#priv.validfn( err, field );
         } else {
-            valid = !err || err.type() !== CoreUI.TypedMessage.C.ERROR;
+            valid = !err || err.type() !== CoreApp.TypedMessage.C.ERROR;
         }
         //console.debug( 'err', err, 'field', field, 'valid', valid );
         return valid;
@@ -120,7 +120,7 @@ export class FormChecker {
                     return _.isFunction( self.#priv.checksObj[fn] ) ? self.#priv.checksObj[fn]( value, self.#priv.data, opts ) : null;
                 })
                 .then(( err ) => {
-                    check( err, Match.OneOf( null, CoreUI.TypedMessage ));
+                    check( err, Match.OneOf( null, CoreApp.TypedMessage ));
                     const valid = self._computeValid( eltData, err );
                     self.#priv.valid.set( valid );
                     // manage different err types
@@ -131,7 +131,7 @@ export class FormChecker {
                         eltData.defn.post( err );
                     }
                     const checked_type = self._computeCheck( eltData, err );
-                    //console.debug( field, 'err', err, 'checked_type', checked_type );
+                    //console.debug( field, err, checked_type );
                     eltData.checked.set( checked_type );
                     // set valid/invalid bootstrap classes
                     if( defn.display !== false && self.#priv.useBootstrapValidationClasses === true && $js.length ){
@@ -293,9 +293,9 @@ export class FormChecker {
         } else {
             const $select = eltData.$js.closest( '.core-yesno-select' );
             if( $select.length ){
-                const def = CoreUI.YesNo.byValue( value );
+                const def = CoreApp.YesNo.byValue( value );
                 if( def ){
-                    eltData.$js.val( CoreUI.YesNo.id( def ));
+                    eltData.$js.val( CoreApp.YesNo.id( def ));
                 }
             } else {
                 eltData.$js.val( value );
@@ -378,7 +378,7 @@ export class FormChecker {
         assert( !o.$err || o.$err.length > 0, 'when provided, $err must be set to a jQuery object' );
         assert( !o.errfn || _.isFunction( o.errfn ), 'when provided, errfn must be a function' );
         assert( !o.errclear || _.isFunction( o.errclear ), 'when provided, errclear must be a function' );
-        assert( !o.entityChecker || o.entityChecker instanceof CoreUI.EntityChecker, 'entityChecker is not a CoreUI.EntityChecker');
+        assert( !o.entityChecker || o.entityChecker instanceof CoreApp.EntityChecker, 'entityChecker is not a CoreApp.EntityChecker');
         if( o.entityChecker && ( o.$ok || o.okfn || o.$err || o.errfn || o.errclear )){
             Meteor.isDevelopment && console.warn( 'An EntityChecker is specified, silently ignoring $ok, okfn, $err, errfn, errclear' );
         }
@@ -453,17 +453,11 @@ export class FormChecker {
                         this._domDataSet( $js, field, defn, parent );
                         eltData = $js.data( 'form-checker' );
                     }
-                    if( eltData ){
-                        promises.push( self[ eltData.fn ]( eltData, opts )
-                            .then(( v ) => {
-                                valid = valid && v;
-                                return valid;
-                            }));
-                    } else {
-                        Meteor.isDevelopment && console.warn( field, 'unable to setup eltData' );
-                    }
-                } else {
-                    Meteor.isDevelopment && console.warn( field, $js );
+                    promises.push( self[ eltData.fn ]( eltData, opts )
+                        .then(( v ) => {
+                            valid &&= v;
+                            return valid;
+                        }));
                 }
             }
             return true;
@@ -625,6 +619,7 @@ export class FormChecker {
      * @param {Object} opts an option object with following keys:
      *  - id: in case of array'ed fields, the id of the item
      *  - $parent: when set, the DOM parent of the targeted form - in case of an array
+     * @returns a Promise which eventually resolves to a validity status
      */
     setupDom( opts={} ){
         const self = this;
@@ -648,6 +643,6 @@ export class FormChecker {
         this._fieldsIterate( cb );
         // at the end, initial check of the form
         opts.update = false;
-        this.check( opts );
+        return this.check( opts );
     }
 }

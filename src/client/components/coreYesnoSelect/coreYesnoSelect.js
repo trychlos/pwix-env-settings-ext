@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/client/components/coreYesnoSelect/coreYesnoSelect.js
+ * pwix:core-app/src/client/components/coreYesnoSelect/coreYesnoSelect.js
  *
  * Select a Yes|No boolean.
  * 

@@ -1,5 +1,5 @@
 /*
- * pwix:core-ui/src/client/stylesheets/_layout.less
+ * pwix:core-app/src/client/stylesheets/_layout.less
  *
  * Positioning utilities
  *
@@ -100,6 +100,9 @@ body {
     .x-no-overflow-y {
         overflow-y: hidden;
     }
+    .x-p0 {
+        padding: 0;
+    }
     .x-pb05 {
         padding-bottom: 0.5em;
     }
@@ -108,6 +111,9 @@ body {
     }
     .x-pl05 {
         padding-left: 0.5em;
+    }
+    .x-pl085 {
+        padding-left: 0.85em;
     }
     .x-pr025 {
         padding-right: 0.25em;
@@ -207,13 +213,13 @@ body {
         width: 12px;
     }
     a.x-extlink.x-black::after {
-        background: url( '/packages/pwix_core-ui/src/client/icons/external-link-black.png' ) no-repeat center/100%;
+        background: url( '/packages/pwix_core-app/src/client/icons/external-link-black.png' ) no-repeat center/100%;
     }
     a.x-extlink.x-svg::after {
-        background: url( '/packages/pwix_core-ui/src/client/icons/svgrepo-471618-link-external.svg' ) no-repeat center/100%;
+        background: url( '/packages/pwix_core-app/src/client/icons/svgrepo-471618-link-external.svg' ) no-repeat center/100%;
     }
     a.x-extlink.x-white::after {
-        background: url( '/packages/pwix_core-ui/src/client/icons/external-link-white.png' ) no-repeat center/100%;
+        background: url( '/packages/pwix_core-app/src/client/icons/external-link-white.png' ) no-repeat center/100%;
     }
     a.extpdf::after {
         display: inline-block;
@@ -223,9 +229,9 @@ body {
         width: 12px;
     }
     a.extpdf.x-black::after {
-        background: url( '/packages/pwix_core-ui/src/client/icons/external-pdf-black.png' ) no-repeat center/100%;
+        background: url( '/packages/pwix_core-app/src/client/icons/external-pdf-black.png' ) no-repeat center/100%;
     }
     a.extpdf.x-white::after {
-        background: url( '/packages/pwix_core-ui/src/client/icons/external-pdf-white.png' ) no-repeat center/100%;
+        background: url( '/packages/pwix_core-app/src/client/icons/external-pdf-white.png' ) no-repeat center/100%;
     }
 }

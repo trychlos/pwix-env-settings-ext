@@ -13,8 +13,8 @@ CoreApp.DOM = {
     ellipsizeLine( $container, text ){
         const width = $container.width();
         const font = parseInt( $container.css( 'fontSize' ));
-        const nbmax = parseInt( width / font );
-        const res = width && font ? ellipsize( text, parseInt( width / font ), { truncate: true }) : '';
+        const nbmax = 2 * parseInt( width / font );
+        const res = width && font ? ellipsize( text, nbmax, { truncate: true }) : '';
         //console.debug( 'text', text, 'nbmax', nbmax, 'res', res );
         return res;
     },

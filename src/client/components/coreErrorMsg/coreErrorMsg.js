@@ -10,11 +10,12 @@
  * 
  * There may be several errors, and the user may want just see all of them, in order to decide himself which one will be first fixed.
  * So:
- *  - this component is just responsible to display the most recent error message
+ *  - this component is just responsible to display the most recent pushed message
  *  - a companion component is able to display all current error/warning/infos messages.
  * 
  * Parms:
  *  - errorsSet: a CoreApp.MessagesSet object
+ *  - classes: classes to be added to the displayed message whatever be its type, defaulting to nothing
  */
 
 import './coreErrorMsg.html';
@@ -27,6 +28,11 @@ Template.coreErrorMsg.onRendered( function(){
 });
 
 Template.coreErrorMsg.helpers({
+    // common classes to be added to the displayed message, whatever be its type
+    errorClasses(){
+        return this.classes || '';
+    },
+
     // the content of the error message as a simple string (not HTML)
     //  because we do not want have several lines, or bold, or any other singularities here
     //  nevertheless the Blaze tempate itself is HTML-capable to be able to handle the '&nbsp;' character

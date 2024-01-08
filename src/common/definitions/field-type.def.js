@@ -7,16 +7,25 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 export const FieldType = {
 
     C: {
+        // info only - not modifiable
         INFO: {
             class: 'fti-info',
             icon: 'fa-info',
             title: 'field_type.info_title'
         },
+        // optional value
+        OPTIONAL: {
+            class: 'fti-optional',
+            icon: 'fa-circle-question',
+            title: 'field_type.optional_title'
+        },
+        // mandatory in order the document be saved
         SAVE: {
             class: 'fti-save',
             icon: 'fa-square-pen',
             title: 'field_type.save_title'
         },
+        // not mandatory for save, but SHOULD be set to be fully operational
         WORK: {
             class: 'fti-work',
             icon: 'fa-person-digging',

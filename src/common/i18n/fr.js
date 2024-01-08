@@ -18,10 +18,11 @@ CoreApp.i18n = {
                 valid_title: 'La valeur est valide'
             },
             field_type: {
-                info_title: 'This value is displayed for information only, cannot be modified here',
-                save_title: 'This value is mandatory; it must be set and valid in order the form be saved',
-                work_title: 'This value is mandatory, but will not prevent the form to be saved. '
-                    +'Anyway you will have to come back here to set it in order the result be operational'
+                info_title: 'Cette valeur n\'est affichée que pour information, ne peut pas être modifiée ici',
+                optional_title: 'Cette valeur est optionelle',
+                save_title: 'Cette valeur est obligatoire; elle doit être renseignée et valide pour que le document puisse être sauvegardé',
+                work_title: 'Cette valeur est obligatoire, mais n\'empêchera pas le document d\'être sauvegardé. '
+                    +'En tout état de cause, vous devrez probablement revenir ici et positionner une valeur valide pour que le résultat soit pleinement opérationnel'
             },
             gdprlink: {
                 label: 'Politique de gestion des données personnelles',

@@ -19,9 +19,10 @@ CoreApp.i18n = {
             },
             field_type: {
                 info_title: 'This value is displayed for information only, cannot be modified here',
-                save_title: 'This value is mandatory; it must be set and valid in order the form be saved',
-                work_title: 'This value is mandatory, but will not prevent the form to be saved. '
-                    +'Anyway you will have to come back here to set it in order the result be operational'
+                optional_title: 'This value is optional',
+                save_title: 'This value is mandatory; it must be set and valid in order the document be saved',
+                work_title: 'This value is mandatory, but will not prevent the document to be saved. '
+                    +'Anyway you may have to come back here to set it in order the result be fully operational'
             },
             gdprlink: {
                 label: 'Personal data management policy',

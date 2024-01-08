@@ -4,10 +4,10 @@
  * A small icon indicator to exhibit the result of the check of the field.
  * 
  * Note: FontAwesome displays its icons by replacing the <span>...</span> element by a svg. As a consequence, the icon cannot be dynamically replaced.
- *  We have to display all icon elements, only making visible the one we are interested in.
+ *  We have to write all icon elements into the DOM, only making visible the one we are interested in.
  * 
  * Parms:
- *  - type: a FieldCheck constant as INVALID, NONE, UNCOMPLETE or VALID
+ *  - type: a FieldCheck constant which may be 'NONE', 'INVALID', 'UNCOMPLETE' or 'VALID'
  *  - classes: if set, a list of classes to be added to the default
  *  - title: if set, a text to replace the default title
  */

@@ -12,10 +12,10 @@ CoreApp.i18n = {
             },
             field_check: {
                 none_title: '',
-                invalid_title: 'This value is not valid preventing the form to be saved',
+                invalid_title: 'This value is not valid preventing the document to be saved',
                 uncomplete_title: 'This value is not set or not valid, but should. '
-                    +'This doesn\'t prevent the form to be saved, but the result will not be operational',
-                valid_title: 'This value is valid'
+                    +'This should not prevent the document to be saved, but the result may not be fully operational',
+                valid_title: 'The value is valid'
             },
             field_type: {
                 info_title: 'This value is displayed for information only, cannot be modified here',

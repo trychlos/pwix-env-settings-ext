@@ -9,7 +9,7 @@
  *  - whether the edited entity can be saved or not (or whether the OK button is enabled or not)
  *  - the error messages list
  * 
- * An EntityChecker doesn't manage any form by itself, but manages a global result for a whole entity, and typically an aggreagation of the validity status
+ * An EntityChecker doesn't manage any form by itself, but manages a global result for a whole entity, and typically an aggregation of the validity status
  * of several forms.
  */
 

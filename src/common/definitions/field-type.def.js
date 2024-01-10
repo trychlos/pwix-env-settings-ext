@@ -16,7 +16,7 @@ export const FieldType = {
         // optional value
         OPTIONAL: {
             class: 'fti-optional',
-            icon: 'fa-circle-question',
+            icon: 'fa-question',
             title: 'field_type.optional_title'
         },
         // mandatory in order the document be saved

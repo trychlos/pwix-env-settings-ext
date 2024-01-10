@@ -107,7 +107,7 @@ export class FormChecker {
             Meteor.isDevelopment && console.warn( '[DEV] \''+fn+'()\' is not defined in provided checks object' );
         }
         // local check function must be called with element dom data
-        self[fn] = function( eltData, opts={} ){
+        self[fn] = async function( eltData, opts={} ){
             if( eltData.$js.length ){
                 eltData.$js.removeClass( 'is-valid is-invalid' );
             }
@@ -131,13 +131,16 @@ export class FormChecker {
                         eltData.defn.post( err );
                     }
                     const checked_type = self._computeCheck( eltData, err );
-                    //console.debug( field, err, checked_type );
+                    //console.debug( eltData.field, err, checked_type );
                     eltData.checked.set( checked_type );
                     // set valid/invalid bootstrap classes
                     if( defn.display !== false && self.#priv.useBootstrapValidationClasses === true && $js.length ){
                         $js.addClass( valid ? 'is-valid' : 'is-invalid' );
                     }
                     return valid;
+                })
+                .catch(( e ) => {
+                    console.error( e );
                 });
         };
         // end_of_function
@@ -435,7 +438,7 @@ export class FormChecker {
      *  - $parent: if set, a jQuery element which acts as the parent of the form
      * @returns a Promise which eventually resolves to the global validity status
      */
-    check( opts={} ){
+    async check( opts={} ){
         let valid = true;
         let promises = [];
         const self = this;
@@ -534,7 +537,7 @@ export class FormChecker {
      * 
      * @returns {Promise} which eventually resolves to the validity status (of the single current field if false, of the whole form else)
      */
-    inputHandler( event, opts={} ){
+    async inputHandler( event, opts={} ){
         // an event addressed to another formChecker, or already handled by another FormChecker
         if(( event.originalEvent['FormChecker'] || {} ).handled === true ){
             return Promise.resolve( null );

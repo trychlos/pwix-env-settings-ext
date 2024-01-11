@@ -1,0 +1,68 @@
+/*
+ * pwix:core-app/src/client/stylesheets/coreTabbedTemplate.less
+ */
+
+.coreTabbedTemplate {
+    // nav and tabs
+    // have a consistent height between the tabs
+    // https://stackoverflow.com/questions/54810478/bootstrap-4-how-to-equal-height-two-tab-panes
+    .consistent-height > .ctbt-pane > .tab-content {
+        display: flex;
+    }
+    .consistent-height > .ctbt-pane > .tab-content > .tab-pane {
+        display: block; /* undo "display: none;" */
+        visibility: hidden;
+        margin-right: -100%;
+        width: 100%;
+        z-index: -1;
+    }
+    .consistent-height > .ctbt-pane > .tab-content > .active {
+        visibility: visible;
+        z-index: 0;
+    }
+    .nav-left.noborder {
+        border: 0;
+        .nav-link.active {
+            border: 0;
+        }
+        .nav-link:hover {
+            border-color: transparent;
+        }
+    }
+    // when we want have tabs on the bottom of the panel
+    .nav-bottom {
+        border-bottom: 0;
+        border-top: var( --bs-nav-tabs-border-width ) solid lightgray;
+        .nav-link {
+            --bs-nav-tabs-link-active-border-color: #ffffff lightgray lightgray lightgray;
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+            border-bottom-left-radius: 0.5em;
+            border-bottom-right-radius: 0.5em;
+        }
+    }
+    .consistent-width {
+        height: 100%;
+        display: flex;
+        flex-direction: row;
+    }
+    .consistent-width > .ctbt-nav > ul {
+        display: flex;
+        flex-direction: column;
+        .nav-item {
+            white-space: nowrap;
+            margin-right: 0.5em;
+        }
+    }
+    // https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
+    .consistent-width > .ctbt-tabbed-panes {
+        min-width: 0;
+        flex-grow: 1;
+        display: flex;
+        flex-direction: columnn;
+
+        .ctbt-pane {
+            flex-grow: 1;
+        }
+    }
+}

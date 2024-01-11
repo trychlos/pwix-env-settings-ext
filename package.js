@@ -51,6 +51,7 @@ function configure( api ){
     api.addFiles( 'src/client/components/coreGDPRLink/coreGDPRLink.js', 'client' );
     api.addFiles( 'src/client/components/coreGTULink/coreGTULink.js', 'client' );
     api.addFiles( 'src/client/components/coreLegalsLink/coreLegalsLink.js', 'client' );
+    api.addFiles( 'src/client/components/coreTabbedTemplate/coreTabbedTemplate.js', 'client' );
     api.addFiles( 'src/client/components/coreYesnoSelect/coreYesnoSelect.js', 'client' );
     api.addAssets([
         'src/client/icons/external-link-black.png',

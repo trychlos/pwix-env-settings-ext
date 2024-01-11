@@ -59,10 +59,10 @@ Template.coreYesnoSelect.helpers({
 });
 
 Template.coreYesnoSelect.events({
-    'input .core-yesno-select'( event, instance ){
-        const selected = instance.$( '.core-yesno-select select option:selected' ).val();
+    'input .ca-yesno-select'( event, instance ){
+        const selected = instance.$( '.ca-yesno-select select option:selected' ).val();
         const def = YesNo.byId( selected );
-        instance.$( '.core-yesno-select' ).trigger( 'yesno-selected', {
+        instance.$( '.ca-yesno-select' ).trigger( 'yesno-selected', {
             value: YesNo.value( def ),
             id: YesNo.id( def )
         });

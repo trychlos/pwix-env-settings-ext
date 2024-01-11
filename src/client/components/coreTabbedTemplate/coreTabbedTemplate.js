@@ -3,20 +3,20 @@
  *
  * Parms:
  *  - tabs, an array of the tabs, or a function which returns such an array, each item being an object
- *      > navLabel: if set, the HTML nav label, or a function returns such a string
- *      > navAttributes: if set, an object, or a function which returns such an object, which define attributes to be attached to the nav-link element
- *          where each attribute is defined as { name: value }
+ *      > navLabel: if set, the HTML nav label, or a function which returns such a string
+ *      > navAttributes: if set, an object, or a function which returns such an object, which define attributes to be added to the nav-link element
+ *          where each attribute is expected to be defined as { name: value }
  *      > navTemplate: if set, a template to be attached as the nav content (besides of the label if one is specified)
  *      > navData: if set, the data to be attached to the navTemplate, or a function which returns such a thing
- *      > paneTemplate: if set, the pane template, or a function which returns such a name
+ *      > paneTemplate: if set, the pane template name, or a function which returns such a name
  *      > paneData: if set, the data to be passed to the paneTemplate, or a function which returns such a thing
  *      > tabName: if set, the name of the tab, or a function which returns such a name
  *  - name: if set, the name used to read/write active tab into/from local storage, or a function which returns such a name
  *  - navPosition: may be 'bottom', 'top', 'left' or 'right'
  *      defaulting to 'top'
- *  - navClasses: classes to be added to the .nav element
+ *  - navClasses: classes to be added to each .nav element
  *  - paneSubTemplate: if set, the name of a template to add below the panes
- *  - paneSubData: if set, the data context to be passed to this sub-template (defaulting to panes data context)
+ *  - paneSubData: if set, the data context to be passed to this sub-template, defaulting to panes data context
  * 
  * Data context:
  * 'coreTabbedTemplate' component increases the data context passed to navTemplate's and paneTemplate's with datas:
@@ -61,18 +61,18 @@ Template.coreTabbedTemplate.onCreated( function(){
         activateByAttribute( attribute ){
             const key = Object.keys( attribute )[0];
             const value = attribute[key];
-            const index = self.$( '.coreTabbedTemplate-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link['+key+'="'+value+'"]' ).data( 'tabbed-index' );
+            const index = self.$( '.ca-tabbed-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link['+key+'="'+value+'"]' ).data( 'tabbed-index' );
             self.APP.activateByIndex( index );
         },
 
         // activate a tab by its index
         activateByIndex( index ){
-            self.$( '.coreTabbedTemplate-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link[data-tabbed-index="'+index+'"]' ).trigger( 'click' );
+            self.$( '.ca-tabbed-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link[data-tabbed-index="'+index+'"]' ).trigger( 'click' );
         },
 
         // activate a tab by its current nav label
         activateByLabel( label ){
-            const index = self.$( '.coreTabbedTemplate-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link :contains("'+label+'")' ).data( 'tabbed-index' );
+            const index = self.$( '.ca-tabbed-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link :contains("'+label+'")' ).data( 'tabbed-index' );
             self.APP.activateByIndex( index );
         },
 
@@ -188,7 +188,7 @@ Template.coreTabbedTemplate.onRendered( function(){
                 const oo = _.isFunction( o ) ? o() : o;
                 if( oo ){
                     Object.keys( oo ).every(( key ) => {
-                        self.$( '.coreTabbedTemplate .nav-link#'+tab.TABBED.tabid ).attr( key, oo[key] );
+                        self.$( '.ca-tabbed-template .nav-link#'+tab.TABBED.tabid ).attr( key, oo[key] );
                         return true;
                     });
                 }
@@ -204,7 +204,7 @@ Template.coreTabbedTemplate.onRendered( function(){
     // track the tabs changes and trigger an event
     self.autorun(() => {
         if( self.APP.tabs.get()){
-            self.$( '.coreTabbedTemplate' ).trigger( 'tabbed-changed', { tabbed: self.APP.myId });
+            self.$( '.ca-tabbed-template' ).trigger( 'tabbed-changed', { tabbed: self.APP.myId });
         }
     });
 });
@@ -334,8 +334,8 @@ Template.coreTabbedTemplate_pane.helpers({
 Template.coreTabbedTemplate.events({
     // note that several tabbed-template may be imbricated - we must only deal with ours and not with those bubbling from lower tabbed-template's
     //  event.target and event.relatedTarget target the active tab and the previous active tab (if available) respectively
-    'shown.bs.tab .coreTabbedTemplate'( event, instance ){
-        const myid = instance.$( event.target ).closest( '.coreTabbedTemplate-nav' ).data( 'tabbed-id' );
+    'shown.bs.tab .ca-tabbed-template'( event, instance ){
+        const myid = instance.$( event.target ).closest( '.ca-tabbed-nav' ).data( 'tabbed-id' );
         if( myid === instance.APP.myId ){
             const tabid = instance.$( event.target ).prop( 'id' );
             let found = null;
@@ -350,7 +350,7 @@ Template.coreTabbedTemplate.events({
                 // update the active tab for next reload and HMR
                 instance.APP.activeTab.set( found.TABBED.index );
                 // advertize all direct .tab-pane's children
-                instance.$( '.coreTabbedTemplate > * > * > * > .tab-pane' ).trigger( 'tabbed-activated', {
+                instance.$( '.ca-tabbed-template > * > * > * > .tab-pane' ).trigger( 'tabbed-activated', {
                     tabbed: myid,
                     name: instance.APP.tabbedName(),
                     tab: { ...found }
@@ -362,7 +362,7 @@ Template.coreTabbedTemplate.events({
     },
 
     // a request to activate a tab
-    'tabbed-activate .coreTabbedTemplate'( event, instance, data ){
+    'tabbed-activate .ca-tabbed-template'( event, instance, data ){
         if( data.tabbed === instance.APP.myId ){
             if( _.isNumber( data.index )){
                 instance.APP.activateByIndex( data.index );

@@ -1,5 +1,5 @@
 <template name="coreTabbedTemplate">
-    <div class="coreTabbedTemplate {{ classes }}" data-tabbed-id="{{ myId }}">
+    <div class="ca-tabbed-template {{ classes }}" data-tabbed-id="{{ myId }}">
 
         {{#if posVertical }}
             <div class="consistent-height">
@@ -15,14 +15,14 @@
             <div class="consistent-width">
                 {{#if posLeft }}
                     {{> coreTabbedTemplate_nav (parmsSubs) }}
-                    <div class="ctbt-tabbed-panes">
+                    <div class="ca-tabbed-panes">
                         {{> coreTabbedTemplate_pane (parmsSubs) }}
                         {{#if haveSubPane }}
                             {{> Template.dynamic template=(parmsSubPane) data=(parmsSubData) }}
                         {{/if}}
                     </div>
                 {{else}}
-                    <div class="ctbt-tabbed-panes">
+                    <div class="ca-tabbed-tabbed-panes">
                         {{> coreTabbedTemplate_pane (parmsSubs) }}
                         {{#if haveSubPane }}
                             {{> Template.dynamic template=(parmsSubPane) data=(parmsSubData) }}
@@ -37,7 +37,7 @@
 </template>
 
 <template name="coreTabbedTemplate_nav">
-    <div class="ctbt-nav" data-tabbed-id="{{ myId }}">
+    <div class="ca-tabbed-nav" data-tabbed-id="{{ myId }}">
         <ul class="nav nav-tabs {{ classes }}" role="tablist">
             {{#each it in tabs }}
                 <li class="nav-item" role="presentation" data-tabbed-tab-id="{{ it.TABBED.id }}">
@@ -56,7 +56,7 @@
 </template>
 
 <template name="coreTabbedTemplate_pane">
-    <div class="ctbt-pane" data-tabbed-id="{{ myId }}">
+    <div class="ca-tabbed-pane" data-tabbed-id="{{ myId }}">
         <div class="tab-content">
             {{#each it in tabs }}
                 {{#if hasTemplate it }}

@@ -2,7 +2,7 @@
     <div class="ca-tabbed-template {{ classes }}" data-tabbed-id="{{ myId }}">
 
         {{#if posVertical }}
-            <div class="consistent-height">
+            <div class="ca-consistent-height">
                 {{#if posTop }}
                     {{> coreTabbedTemplate_nav (parmsSubs) }}
                     {{> coreTabbedTemplate_pane (parmsSubs) }}
@@ -12,7 +12,7 @@
                 {{/if}}
             </div>
         {{else}}
-            <div class="consistent-width">
+            <div class="ca-consistent-width">
                 {{#if posLeft }}
                     {{> coreTabbedTemplate_nav (parmsSubs) }}
                     <div class="ca-tabbed-panes">

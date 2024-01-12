@@ -6,17 +6,17 @@
     // nav and tabs
     // have a consistent height between the tabs
     // https://stackoverflow.com/questions/54810478/bootstrap-4-how-to-equal-height-two-tab-panes
-    .consistent-height > .ca-tabbed-pane > .tab-content {
+    .ca-consistent-height > .ca-tabbed-pane > .tab-content {
         display: flex;
     }
-    .consistent-height > .ca-tabbed-pane > .tab-content > .tab-pane {
+    .ca-consistent-height > .ca-tabbed-pane > .tab-content > .tab-pane {
         display: block; /* undo "display: none;" */
         visibility: hidden;
         margin-right: -100%;
         width: 100%;
         z-index: -1;
     }
-    .consistent-height > .ca-tabbed-pane > .tab-content > .active {
+    .ca-consistent-height > .ca-tabbed-pane > .tab-content > .active {
         visibility: visible;
         z-index: 0;
     }
@@ -41,12 +41,12 @@
             border-bottom-right-radius: 0.5em;
         }
     }
-    .consistent-width {
+    .ca-consistent-width {
         height: 100%;
         display: flex;
         flex-direction: row;
     }
-    .consistent-width > .ca-tabbed-nav > ul {
+    .ca-consistent-width > .ca-tabbed-nav > ul {
         display: flex;
         flex-direction: column;
         .nav-item {
@@ -55,11 +55,11 @@
         }
     }
     // https://stackoverflow.com/questions/36230944/prevent-flex-items-from-overflowing-a-container
-    .consistent-width > .ca-tabbed-panes {
+    .ca-consistent-width > .ca-tabbed-panes {
         min-width: 0;
         flex-grow: 1;
         display: flex;
-        flex-direction: columnn;
+        flex-direction: column;
 
         .ca-tabbed-pane {
             flex-grow: 1;

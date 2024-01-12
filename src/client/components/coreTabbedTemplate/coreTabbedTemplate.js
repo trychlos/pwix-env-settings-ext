@@ -212,7 +212,7 @@ Template.coreTabbedTemplate.onRendered( function(){
 Template.coreTabbedTemplate.helpers({
     // make the div height 100% when position is horizontal
     classes(){
-        return Template.instance().APP.isVertical() ? '' : 'x-h100';
+        return Template.instance().APP.isVertical() ? '' : 'ca-h100';
     },
     // whether we have a sub-pane ?
     haveSubPane(){

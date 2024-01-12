@@ -470,6 +470,7 @@ export class FormChecker {
                 if( opts.display === false ){
                     self.clear();
                 }
+                //self.#priv.entityChecker && console.debug( self.#priv.entityChecker );
                 return valid;
             });
     }

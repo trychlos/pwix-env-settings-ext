@@ -14,7 +14,10 @@
 |   11 | 2023- 9-28 | env-settings: package configuration is re-run when language changes - why? |
 |   14 | 2023-12-16 | PageCurrent. editAllowed() accessAllowed() should be able to take functions as arguments |
 |   15 | 2023-12-16 | have a component able to build a menu from allowed pages ? |
-|   17 |  |  |
+|   17 | 2024- 1-12 | TabbedTemplate: the application should be allowed to block a pane change, even if the user changes the route or select another tab of another TabbedTemplate |
+|      |            | or anything else - use case: prevent losing unsaved changes on a pane |
+|   18 | 2024- 1-13 | FormChecker doesn't work for radio buttons |
+|   19 |  |  |
 
 ---
 ## Done

@@ -266,8 +266,9 @@ export class FormChecker {
         const tagName = eltData.$js.prop( 'tagName' );
         const eltType = eltData.$js.attr( 'type' );
         let value;
-        if( tagName === 'INPUT' && eltType === 'checkbox' ){
+        if( tagName === 'INPUT' && ( eltType === 'checkbox' )){
             value = eltData.$js.prop( 'checked' );
+            //value = eltData.$js.find( ':checked' ).val();
         } else {
             value = eltData.$js.val() || '';
             // a small hack to handle 'true' and 'false' values from coreYesnoSelect
@@ -291,8 +292,9 @@ export class FormChecker {
         }
         const tagName = eltData.$js.prop( 'tagName' );
         const eltType = eltData.$js.attr( 'type' );
-        if( tagName === 'INPUT' && eltType === 'checkbox' ){
+        if( tagName === 'INPUT' && ( eltType === 'checkbox' )){
             eltData.$js.prop( 'checked', value );
+            //eltData.$js.find( '[value="'+value+'"]' ).prop( 'checked', true );
         } else {
             const $select = eltData.$js.closest( '.core-yesno-select' );
             if( $select.length ){
@@ -485,7 +487,7 @@ export class FormChecker {
             return true;
         });
         // also clears the error messages if any
-        self.#priv._msgClear();
+        this._msgClear();
     }
 
     /**

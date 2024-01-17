@@ -14,7 +14,8 @@
  *  - name: if set, the name used to read/write active tab into/from local storage, or a function which returns such a name
  *  - navPosition: may be 'bottom', 'top', 'left' or 'right'
  *      defaulting to 'top'
- *  - navClasses: classes to be added to each .nav element
+ *  - navClasses: classes to be added to each ul.nav element
+ *  - navLinkClasses: classes to be added to each button.nav-link element
  *  - paneSubTemplate: if set, the name of a template to add below the panes
  *  - paneSubData: if set, the data context to be passed to this sub-template, defaulting to panes data context
  * 
@@ -24,15 +25,25 @@
  * - tabbedTabId: the identifier of each tab, same whether we display a nav-link or a tab-pane
  * 
  * Handled events:
- *  - tabbed-activate, data={ tabbed, index } ask to activate the tab by its index
- *  - tabbed-activate, data={ tabbed, label } ask to activate the tab by its current nav label
- *  - tabbed-activate, data={ tabbed, name } ask to activate the tab by its name
- *  - tabbed-activate, data={ tabbed, attribute } ask to activate the tab by the specified nav attribute
+ *  - tabbed-do-activate, data={ tabbedId, index } ask to activate the tab by its index
+ *  - tabbed-do-activate, data={ tabbedId, label } ask to activate the tab by its current nav label
+ *  - tabbed-do-activate, data={ tabbedId, name } ask to activate the tab by its name
+ *  - tabbed-do-activate, data={ tabbedId, attribute } ask to activate the tab by the specified nav attribute
+ *  - tabbed-do-enable, data={ tabbedId, index, enabled } ask to enable/disable the tab by its index
+ *  - tabbed-do-enable, data={ tabbedId, label, enabled } ask to enable/disable the tab by its current nav label
+ *  - tabbed-do-enable, data={ tabbedId, name, enabled } ask to enable/disable the tab by its name
+ *  - tabbed-do-enable, data={ tabbedId, attribute, enabled } ask to enable/disable the tab by the specified nav attribute
  *  where 'tabbed' is expected to be the internal identifier of this tabbed template
  * 
  * Triggered events:
- *  - tabbed-changed, data={ tabbed:<tabbed_id> }
- *  - tabbed-activated, data={ tabbed:<tabbed_id>, name:<tabbed_name>, tab:<tab_object> }
+ *  > on itself (and bubble up to the parents)
+ *    - tabbed-rendered, data={ tabbedId, tabbedName, $tabbed }  when the coreTabbedTemplate component is rendered
+ *    - tabbed-changed, data={ tabbedId, tabbedName, $tabbed }   when the tabs population has changed
+ *  > on every .tab-pane first child
+ *    - tabbed-pane-to-hide, data={ tabbedId, tabbedName, tab:<tab_object>, next:<tab_object> } when about to leave a tab
+ *    - tabbed-pane-to-show, data={ tabbedId, tabbedName, tab:<tab_object>, prev:<tab_object> } when a new tab is about to be shown
+ *    - tabbed-pane-hidden, data={ tabbedId, tabbedName, tab:<tab_object>, next:<tab_object> } when a tab has left
+ *    - tabbed-pane-shown, data={ tabbedId, tabbedName, tab:<tab_object>, prev:<tab_object> } when a tab has been shown
  * 
  * Identifiers management:
  * We dynamically allocate random identifiers for:
@@ -61,23 +72,32 @@ Template.coreTabbedTemplate.onCreated( function(){
         activateByAttribute( attribute ){
             const key = Object.keys( attribute )[0];
             const value = attribute[key];
-            const index = self.$( '.ca-tabbed-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link['+key+'="'+value+'"]' ).data( 'tabbed-index' );
+            const index = self.$( '.ca-tabbed-navs[data-tabbed-id="'+self.APP.myId+'"] .nav-link['+key+'="'+value+'"]' ).data( 'tabbed-index' );
             self.APP.activateByIndex( index );
         },
 
         // activate a tab by its index
         activateByIndex( index ){
-            self.$( '.ca-tabbed-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link[data-tabbed-index="'+index+'"]' ).trigger( 'click' );
+            //console.debug( 'activateByIndex', index, self.$( '.ca-tabbed-navs[data-tabbed-id="'+self.APP.myId+'"] .nav-link[data-tabbed-index="'+index+'"]' ));
+            self.$( '.ca-tabbed-navs[data-tabbed-id="'+self.APP.myId+'"] .nav-link[data-tabbed-index="'+index+'"]' ).trigger( 'click' );
         },
 
         // activate a tab by its current nav label
         activateByLabel( label ){
-            const index = self.$( '.ca-tabbed-nav[data-tabbed-id="'+self.APP.myId+'"] .nav-link :contains("'+label+'")' ).data( 'tabbed-index' );
+            const index = self.$( '.ca-tabbed-navs[data-tabbed-id="'+self.APP.myId+'"] .nav-link :contains("'+label+'")' ).data( 'tabbed-index' );
             self.APP.activateByIndex( index );
         },
 
         // activate a tab by its name
         activateByName( name ){
+            const found = self.APP.byName( name );
+            if( found ){
+                self.APP.activateByIndex( found.TABBED.index );
+            }
+        },
+
+        // return the tab definition by its name, or null
+        byName( name ){
             let found = null;
             self.APP.tabs().every(( tab ) => {
                 if( tab.name === name ){
@@ -85,9 +105,19 @@ Template.coreTabbedTemplate.onCreated( function(){
                 }
                 return found === null;
             });
-            if( found ){
-                self.APP.activateByIndex( found.TABBED.index );
-            }
+            return found;
+        },
+
+        // return the tab definition by its tab-id, or null
+        byTabId( id ){
+            let found = null;
+            self.APP.tabs.get().every(( tab ) => {
+                if( tab.TABBED.tabid === id ){
+                    found = tab;
+                }
+                return found === null;
+            });
+            return found;
         },
 
         // dump the tabs array, returning this same tabs array to allow chaining
@@ -99,6 +129,46 @@ Template.coreTabbedTemplate.onCreated( function(){
                 });
             }
             return tabs;
+        },
+
+        // enable/disable a tab by a nav attribute specified as { name: value }
+        enableByAttribute( attribute, enabled ){
+            const key = Object.keys( attribute )[0];
+            const value = attribute[key];
+            const index = self.$( '.ca-tabbed-navs[data-tabbed-id="'+self.APP.myId+'"] .nav-link['+key+'="'+value+'"]' ).data( 'tabbed-index' );
+            self.APP.enableByIndex( index, enabled );
+        },
+
+        // enable/disable a tab by its index
+        enableByIndex( index, enabled ){
+            const $nav = self.$( '.ca-tabbed-navs[data-tabbed-id="'+self.APP.myId+'"] .nav-link[data-tabbed-index="'+index+'"]' )
+            if( enabled ){
+                $nav.removeClass( 'disabled' );
+            } else {
+                $nav.addClass( 'disabled' );
+            }
+        },
+
+        // enable/disable a tab by its current nav label
+        enableByLabel( label, enabled ){
+            const index = self.$( '.ca-tabbed-navs[data-tabbed-id="'+self.APP.myId+'"] .nav-link :contains("'+label+'")' ).data( 'tabbed-index' );
+            self.APP.enableByIndex( index, enabled );
+        },
+
+        // enable/disable a tab by its name
+        enableByName( name, enabled ){
+            const found = self.APP.byName( name );
+            if( found ){
+                self.APP.enableByIndex( found.TABBED.index, enabled );
+            }
+        },
+
+        // returns the jQuery objects which correspond to the first child of each pane
+        //  (which is expected to be the application component for the pane)
+        //  .ca-tabbed-template > .ca-consistent-width|height > .ca-panes-encloser > .ca-tabbed-panes > .tab-content > .tab-pane > child
+        firstPaneChildren(){
+            //console.debug( self.$( '.ca-tabbed-template[data-tabbed-id="'+self.APP.myId+'"] > * > * > * > * > .tab-pane > :first-child' ));
+            return self.$( '.ca-tabbed-template[data-tabbed-id="'+self.APP.myId+'"] > * > * > * > * > .tab-pane > :first-child' );
         },
 
         // returns the list of tabs
@@ -113,7 +183,8 @@ Template.coreTabbedTemplate.onCreated( function(){
                     tabs[i].TABBED = {
                         id: id,
                         tabid: 'tabbed-t-'+id,
-                        paneid: 'tabbed-p-'+id
+                        paneid: 'tabbed-p-'+id,
+                        name: self.APP.tabName( tabs[i] )
                     };
                 }
                 tabs[i].TABBED.index = i;
@@ -132,20 +203,49 @@ Template.coreTabbedTemplate.onCreated( function(){
             return _.toString( _.isFunction( tab.navLabel ) ? tab.navLabel() : tab.navLabel );
         },
 
-        // returns the tab name
-        tabName( tab ){
-            return _.toString( _.isFunction( tab.tabName ) ? tab.name() : tab.tabName );
-        },
-
         // returns the pane template
         paneTemplate( tab ){
             return _.toString( _.isFunction( tab.paneTemplate ) ? tab.paneTemplate() : tab.paneTemplate );
+        },
+
+        // returns the tab name
+        tabName( tab ){
+            return _.toString( _.isFunction( tab.tabName ) ? tab.name() : tab.tabName );
         },
 
         // returns the name associated with this tabbed template
         tabbedName(){
             const a = Template.currentData().name;
             return _.toString( _.isFunction( a ) ? a() : a );
+        },
+
+        // advertize the child panes of a tab transition
+        //  it is expected the event will bubble up to here and to our parents
+        tabTransition( event, $targets, current, field, related ){
+            const myid = self.$( current ).closest( '.ca-tabbed-navs' ).data( 'tabbed-id' );
+            if( myid === self.APP.myId ){
+                const tabid = self.$( current ).prop( 'id' );
+                const found = self.APP.byTabId( tabid );
+                if( found ){
+                    // update the active tab for next reload and HMR
+                    self.APP.activeTab.set( found.TABBED.index );
+                    // advertize all direct .tab-pane's children
+                    const data = {
+                        tabbedId: myid,
+                        tabbedName: self.APP.tabbedName(),
+                        tab: { ...found }
+                    };
+                    // search the related tab if any
+                    const relatedTab = self.APP.byTabId( self.$( related ).prop( 'id' ));
+                    if( field && related ){
+                        data[field] = { ...relatedTab };
+                    }
+                    //console.debug( 'trigerring', event, data, $targets );
+                    $targets.trigger( event, data );
+                } else {
+                    console.warn( 'myId', myid, 'tabid not found', tabid );
+                }
+            }
         }
     };
 
@@ -157,7 +257,7 @@ Template.coreTabbedTemplate.onCreated( function(){
     // track last active tab from session storage
     self.autorun(() => {
         const name = self.APP.tabbedName();
-        if( name ){
+        if( name && name.length ){
             self.APP.activeTab.set( parseInt( sessionStorage.getItem( name+':activeTab' )) || 0 );
         }
     });
@@ -166,7 +266,7 @@ Template.coreTabbedTemplate.onCreated( function(){
     self.autorun(() => {
         const activeTab = self.APP.activeTab.get();
         const name = self.APP.tabbedName();
-        if( _.isString( name ) && _.isFinite( activeTab )){
+        if(name && name.length && _.isFinite( activeTab )){
             sessionStorage.setItem( name+':activeTab', activeTab );
         }
     });
@@ -179,6 +279,13 @@ Template.coreTabbedTemplate.onCreated( function(){
 
 Template.coreTabbedTemplate.onRendered( function(){
     const self = this;
+
+    // advertize of our creation
+    self.$( '.ca-tabbed-template' ).trigger( 'tabbed-rendered', {
+        tabbedId: self.APP.myId,
+        tabbedName: self.APP.tabbedName(),
+        $tabbed: self.$( '.ca-tabbed-template[data-tabbed-id="'+self.APP.myId+'"]' )
+    });
 
     // set the attributes on nav-link's if asked for
     self.autorun(() => {
@@ -204,7 +311,11 @@ Template.coreTabbedTemplate.onRendered( function(){
     // track the tabs changes and trigger an event
     self.autorun(() => {
         if( self.APP.tabs.get()){
-            self.$( '.ca-tabbed-template' ).trigger( 'tabbed-changed', { tabbed: self.APP.myId });
+            self.$( '.ca-tabbed-template' ).trigger( 'tabbed-changed', {
+                tabbedId: self.APP.myId,
+                tabbedName: self.APP.tabbedName(),
+                $tabbed: self.$( '.ca-tabbed-template[data-tabbed-id="'+self.APP.myId+'"]' )
+            });
         }
     });
 });
@@ -276,6 +387,10 @@ Template.coreTabbedTemplate_nav.helpers({
     hasTemplate( it ){
         return it.navTemplate;
     },
+    // add some classes to the nav-link's
+    linkClasses( it ){
+        return this.dataContext.navLinkClasses || '';
+    },
     // an identifier of this tabbed template
     myId(){
         return this.APP.myId;
@@ -333,37 +448,37 @@ Template.coreTabbedTemplate_pane.helpers({
 
 Template.coreTabbedTemplate.events({
     // note that several tabbed-template may be imbricated - we must only deal with ours and not with those bubbling from lower tabbed-template's
-    //  event.target and event.relatedTarget target the active tab and the previous active tab (if available) respectively
+    // hide.bs.tab is the first event triggered during the tab transition
+    //  event.target and event.relatedTarget target the current active tab and the new-to-be-activated tab (if available) respectively
+    'hide.bs.tab .ca-tabbed-template'( event, instance ){
+        instance.APP.tabTransition( 'tabbed-pane-to-hide', instance.APP.firstPaneChildren(), event.target, 'next', event.relatedTarget );
+        //instance.APP.tabTransition( 'tabbed-pane-to-hide', instance.$( '.ca-tabbed-template' ), event.target, 'next', event.relatedTarget );
+    },
+
+    // show.bs.tab is the second event triggered during the tab transition
+    //  event.target and event.relatedTarget target the active tab and the previously active tab (if available) respectively
+    'show.bs.tab .ca-tabbed-template'( event, instance ){
+        instance.APP.tabTransition( 'tabbed-pane-to-show', instance.APP.firstPaneChildren(), event.target, 'prev', event.relatedTarget );
+        //instance.APP.tabTransition( 'tabbed-pane-to-show', instance.$( '.ca-tabbed-template' ), event.target, 'prev', event.relatedTarget );
+    },
+
+    // hidden.bs.tab is the last-but-one event triggered during the tab transition
+    //  event.target and event.relatedTarget target the just hidden tab and the new-to-be-activated tab (if available) respectively
+    'hidden.bs.tab .ca-tabbed-template'( event, instance ){
+        instance.APP.tabTransition( 'tabbed-pane-hidden', instance.APP.firstPaneChildren(), event.target, 'next', event.relatedTarget );
+        //instance.APP.tabTransition( 'tabbed-pane-hidden', instance.$( '.ca-tabbed-template' ), event.target, 'next', event.relatedTarget );
+    },
+
+    // shown.bs.tab is the last event triggered during the tab transition
+    //  event.target and event.relatedTarget target the active tab and the previously active tab (if available) respectively
     'shown.bs.tab .ca-tabbed-template'( event, instance ){
-        const myid = instance.$( event.target ).closest( '.ca-tabbed-nav' ).data( 'tabbed-id' );
-        if( myid === instance.APP.myId ){
-            const tabid = instance.$( event.target ).prop( 'id' );
-            let found = null;
-            instance.APP.tabs.get().every(( tab ) => {
-                if( tab.TABBED.tabid === tabid ){
-                    found = tab;
-                }
-                return found === null;
-            });
-            // a tab is just shown - what to do with that ?
-            if( found ){
-                // update the active tab for next reload and HMR
-                instance.APP.activeTab.set( found.TABBED.index );
-                // advertize all direct .tab-pane's children
-                instance.$( '.ca-tabbed-template > * > * > * > .tab-pane' ).trigger( 'tabbed-activated', {
-                    tabbed: myid,
-                    name: instance.APP.tabbedName(),
-                    tab: { ...found }
-                });
-        } else {
-                console.warn( 'myId', myid, 'tabid not found', tabid );
-            }
-        }
+        instance.APP.tabTransition( 'tabbed-pane-shown', instance.APP.firstPaneChildren(), event.target, 'prev', event.relatedTarget );
+        //instance.APP.tabTransition( 'tabbed-pane-shown', instance.$( '.ca-tabbed-template' ), event.target, 'prev', event.relatedTarget );
     },
 
     // a request to activate a tab
-    'tabbed-activate .ca-tabbed-template'( event, instance, data ){
-        if( data.tabbed === instance.APP.myId ){
+    'tabbed-do-activate .ca-tabbed-template'( event, instance, data ){
+        if( data.tabbedId === instance.APP.myId ){
             if( _.isNumber( data.index )){
                 instance.APP.activateByIndex( data.index );
             } else if( data.label ){
@@ -374,5 +489,22 @@ Template.coreTabbedTemplate.events({
                 instance.APP.activateByAttribute( data.attribute );
             }
         }
+        return false;
+    },
+
+    // a request to enable/disable a tab
+    'tabbed-do-enable .ca-tabbed-template'( event, instance, data ){
+        if( data.tabbedId === instance.APP.myId ){
+            if( _.isNumber( data.index )){
+                instance.APP.enableByIndex( data.index, data.enabled );
+            } else if( data.label ){
+                instance.APP.enableByLabel( data.label, data.enabled );
+            } else if( data.name ){
+                instance.APP.enableByName( data.name, data.enabled );
+            } else if( data.attribute ){
+                instance.APP.enableByAttribute( data.attribute, data.enabled );
+            }
+        }
+        return false;
     }
 });

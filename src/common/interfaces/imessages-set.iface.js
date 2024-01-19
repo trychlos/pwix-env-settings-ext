@@ -47,6 +47,17 @@ export const IMessagesSet = DeclareMixin(( superclass ) => class extends supercl
     }
 
     /**
+     * @summary Dumps the message stack
+     */
+    IMessageSetDump(){
+        this._set.every(( tm ) => {
+            console.debug( 'IMessageSetDump()', tm );
+            return true;
+        });
+        this._dep.depend();
+    }
+
+    /**
      * @returns {ITypedMessage} the last pushed message
      */
     IMessageSetLast(){

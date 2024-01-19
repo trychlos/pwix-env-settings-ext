@@ -181,10 +181,46 @@ export class EntityChecker extends mix( caBase ).with( IMessagesOrderedSet, IMes
     }
 
     /**
+     * @summary The EntityChecker's correspondant of FormChecker.check() method
+     *  In FormChecker: the corresponding field is checked on each input event. If the current value of the field is valid, then all other fields of the form
+     *  (but this one) are re-checked so that we get the full error message set.
+     *  When we have an EntityChecker, then it is able to re-cgeck every registered FormChecker with these same parms.
+     * @param {Object} opts an option object with following keys:
+     *  - field: if set, indicates a field to not check (as just already validated from an input handler)
+     *      (note that this field is only relevant for the FormChecker which has triggered us)
+     *  - display: if set, then says whether checks have any effect on the display, defaulting to true
+     *  - msgerr: if set, says if error message are to be displayed, defaulting to true
+     *  - update: if set, then says whether the value found in the form should update the edited object, defaulting to true
+     *  - $parent: if set, a jQuery element which acts as the parent of the form
+     * 
+     * This doesn't return anything.
+     */
+    check(){
+        this.errorClear();
+        let promises = [];
+        this.#forms.every(( form ) => {
+            promises.push( form.check( opts ).then(( valid ) => {
+                if( _.isBoolean( valid )){
+
+                }
+                return valid;
+            }));
+            return true;
+        });
+        Promise.allSettled( promises ).then(( results ) => {
+            results.forEach(( res ) => {
+                Meteor.isDevelopment && res.status === 'rejected' && console.warn( res );
+            });
+            Meteor.isDevelopment && this.IMessagesSetDump();
+        });
+    }
+
+    /**
      * @summary Clears the error message place, and the error messages stack
      */
     errorClear(){
         this.IMessagesSetClear();
+        this.#dataParts.clear();
         if( this.#conf.$err && this.#conf.$err.length ){
             $err.val( '' );
         }
@@ -228,7 +264,7 @@ export class EntityChecker extends mix( caBase ).with( IMessagesOrderedSet, IMes
     panelValidity( o ){
         assert( o && _.isObject( o ), 'EntityChecker.panelValidity() wants a plain javascript Object' );
         assert( o.emitter && _.isString( o.emitter ) && o.emitter.length, 'EntityChecker.panelValidity() wants an non-empty emitter' );
-        assert( o.ok && _.isBoolean( o.ok ), 'EntityChecker.panelValidity() wants a boolean validity status' );
+        assert( _.isBoolean( o.ok ), 'EntityChecker.panelValidity() wants a boolean validity status' );
         this.#dataParts.set( o.emitter, o.ok );
     }
 }

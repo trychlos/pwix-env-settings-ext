@@ -127,11 +127,11 @@ export class FormChecker extends caBase {
     _computeCheck( eltData, err ){
         let check = 'NONE';
         if( err ){
-            switch( err.type()){
-                case CoreApp.TypedMessage.C.ERROR:
+            switch( err.ITypedMessageType()){
+                case CoreApp.MessageType.C.ERROR:
                     check = 'INVALID';
                     break;
-                case CoreApp.TypedMessage.C.WARNING:
+                case CoreApp.MessageType.C.WARNING:
                     check = 'UNCOMPLETE';
                     break;
             }
@@ -414,7 +414,7 @@ export class FormChecker extends caBase {
      * @param {Object} opts
      * @returns {FormChecker} this FormChecker instance
      */
-    constructor( instance, opts ){
+    constructor( instance, fields, opts ){
         super( ...arguments );
         const self = this;
 
@@ -432,8 +432,8 @@ export class FormChecker extends caBase {
             if( opts.entityChecker && ( opts.$ok || opts.okFn || opts.$err || opts.errFn || opts.errClearFn )){
                 Meteor.isDevelopment && console.warn( 'An EntityChecker is specified, silently ignoring $ok, okFn, $err, errFn, errClearFn' );
             }
-            assert( !Object.keys( opts ).includes( inputOkCheckAll ) || _.isBoolean( opts.inputOkCheckAll ), 'when set, options.inputOkCheckAll must be a Boolean');
-            assert( !Object.keys( opts ).includes( useBootstrapValidationClasses ) || _.isBoolean( opts.useBootstrapValidationClasses ), 'when set, options.useBootstrapValidationClasses must be a Boolean');
+            assert( !Object.keys( opts ).includes( 'inputOkCheckAll' ) || _.isBoolean( opts.inputOkCheckAll ), 'when set, options.inputOkCheckAll must be a Boolean');
+            assert( !Object.keys( opts ).includes( 'useBootstrapValidationClasses' ) || _.isBoolean( opts.useBootstrapValidationClasses ), 'when set, options.useBootstrapValidationClasses must be a Boolean');
             assert( !opts.validFn || _.isFunction( opts.validFn ), 'when set, options.validFn must be a function' );
         }
 
@@ -447,31 +447,12 @@ export class FormChecker extends caBase {
 
         // initialize runtime data
 
-        //  + define a ReactiveVar for this instance which will hold the item validity status
-        /*
-        this.#priv = {
-            // the parameters
-            instance: o.instance,
-            checks: o.checks || o.collection,
-            fnPrefix: o.fnPrefix || '',
-            fields: o.fields,
-            $ok: o.$ok || null,
-            okFn: o.okFn || null,
-            $err: o.$err || null,
-            errfn: o.errfn || null,
-            errclear: o.errclear || null,
-            entityChecker: o.entityChecker || null,
-            data: o.data || {},
-            inputOkCheckAll: _.isBoolean( o.inputOkCheckAll ) ? o.inputOkCheckAll : true,
-            useBootstrapValidationClasses: _.isBoolean( o.useBootstrapValidationClasses ) ? o.useBootstrapValidationClasses : false,
-            validFn: o.validFn || null,
-            // our internal vars
-            valid: new ReactiveVar( false )
-        };
-        */
+        if( this.#conf.entityChecker ){
+            this.#conf.entityChecker.formRegister( this );
+        }
 
         // define an autorun which will enable/disable the OK button depending of the validity status
-        o.instance.autorun(() => {
+        this.#instance.autorun(() => {
             const valid = self.#valid.get();
             if( self.#conf.$ok ){
                 self.#conf.$ok.prop( 'disabled', !valid );
@@ -496,7 +477,7 @@ export class FormChecker extends caBase {
      *  - msgerr: if set, says if error message are to be displayed, defaulting to true
      *  - update: if set, then says whether the value found in the form should update the edited object, defaulting to true
      *  - $parent: if set, a jQuery element which acts as the parent of the form
-     * @returns a Promise which eventually resolves to the global validity status
+     * @returns {Promise} which eventually resolves to the global validity status of the form
      */
     async check( opts={} ){
         let valid = true;
@@ -613,7 +594,8 @@ export class FormChecker extends caBase {
             return this[ o.fn ]( o, opts )
                 .then(( valid ) => {
                     if( valid && this.#conf.inputOkCheckAll !== false ){
-                        return this.check({ field: o.field, update: false });
+                        const parms = { field: o.field, update: false };
+                        return this.#conf.entityChecker ? this.#conf.entityChecker.check( parms ) : this.check( parms );
                     }
                     return valid;
                 });

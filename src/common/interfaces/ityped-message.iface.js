@@ -24,24 +24,26 @@ export const ITypedMessage = DeclareMixin(( superclass ) => class extends superc
 
     /**
      * @summary Constructor
-     * @param {Object|String} o an object with following keys:
+     * @param {Object|String} args either a message string or an object with following keys:
      *  - emitter {String} the emitter, defaulting to null
      *  - type {String} a key from MessageType.C, defaulting to MessageType.C.LOG
      *  - message {String} the message itself (mandatory)
      * @returns {ITypedMessage}
      */
-    constructor(){
+    constructor( args ){
         super( ...arguments );
 
-        if( o.type && !Object.keys( MessageType.C ).includes( o.type )){
-            throw new SyntaxError( 'ITypedMessage() unknown type: '+o.type );
+        assert( args, 'arguments must be set' );
+        if( _.isObject( args )){
+            assert( !args.type || Object.keys( MessageType.C ).includes( args.type ), 'type is invalid' );
+            assert( args.message && _.isString( args.message ) && args.message.length, 'message must be a non-empty string' );
+        } else {
+            assert( _.isString( args ) && args.length, 'if not an object, argument must be a non-empty string' );
         }
-        if( !_.isString( o ) && !o.message ){
-            throw new SyntaxError( 'ITypedMessage() message is mandatory, not found' );
-        }
-        this.#emitter = o.emitter || null;
-        this.#type = o.type || TypedMessage.C.LOG;
-        this.#message = _.isString( o ) ? o : o.message;
+
+        this.#emitter = args.emitter || null;
+        this.#type = args.type || MessageType.C.LOG;
+        this.#message = _.isString( args ) ? args : args.message;
 
         return this;
     }

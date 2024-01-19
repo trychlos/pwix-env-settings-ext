@@ -8,7 +8,7 @@ const assert = require( 'assert' ).strict;
 import { pwixI18n } from 'meteor/pwix:i18n';
 
 export const YesNo = {
-    C: [
+    K: [
         {
             // yes|true
             id: 'true',
@@ -65,7 +65,7 @@ export const YesNo = {
      * @returns {Array} the list of managed YesNo definitions
      */
     Knowns(){
-        return this.C;
+        return this.K;
     },
 
     /**

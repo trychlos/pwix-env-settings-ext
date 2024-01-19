@@ -17,7 +17,8 @@
 |   17 | 2024- 1-12 | TabbedTemplate: the application should be allowed to block a pane change, even if the user changes the route or select another tab of another TabbedTemplate |
 |      |            | or anything else - use case: prevent losing unsaved changes on a pane |
 |   18 | 2024- 1-13 | FormChecker doesn't work for radio buttons |
-|   19 |  |  |
+|   19 | 2024- 1-19 | namespace all triggered events (see https://api.jquery.com/on/) |
+|   20 |  |  |
 
 ---
 ## Done

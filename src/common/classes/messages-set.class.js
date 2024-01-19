@@ -1,64 +1,26 @@
 /*
  * /src/common/classes/messages-set.class.js
  *
- * A set of CoreApp.TypedMessage's.
+ * A class which implements the IMessagesSet interface.
  */
 
-import { Tracker } from 'meteor/tracker';
+import _ from 'lodash';
+const assert = require( 'assert' ).strict; // up to nodejs v16.x
+import mix from '@vestergaard-company/js-mixin';
 
-import { TypedMessage } from './typed-message.class.js';
+import { caBase } from './base.class.js';
 
-export class MessagesSet {
+import { IMessagesSet } from '../interfaces/imessages-set.iface.js';
+
+export class MessagesSet extends mix( caBase ).with( IMessagesSet ){
 
     // static data
-
-    static Hierarchy = [
-        TypedMessage.C.ERROR,
-        TypedMessage.C.WARNING,
-        TypedMessage.C.INFO,
-        TypedMessage.C.DEBUG,
-        TypedMessage.C.TRACE,
-        TypedMessage.C.LOG
-    ];
 
     // static methods
 
     // private data
 
-    // the set of izError's
-    #set = [];
-
-    // dependency tracking
-    #dep = null;
-
     // private methods
-
-    // returns the last izError of the given type
-    _lastByType( type ){
-        for( let i=this.#set.length-1 ; i>=0 ; --i ){
-            const o = this.#set[i];
-            if( o.type() === type ){
-                return o;
-            }
-        }
-        return null;
-    }
-
-    // returns the last TypedMessage starting from the given type, descending down to a less hierarchical type until something is found
-    _lastFromType( type ){
-        let msgFound = null;
-        let typeFound = false;
-        MessagesSet.Hierarchy.every(( t ) => {
-            if( !typeFound && t === type ){
-                typeFound = true;
-            }
-            if( typeFound ){
-                msgFound = this._lastByType( t );
-            }
-            return msgFound === null;
-        });
-        return msgFound;
-    }
 
     // public data
 
@@ -67,35 +29,7 @@ export class MessagesSet {
      * @returns {MessagesSet}
      */
     constructor(){
-        this.#dep = new Tracker.Dependency();
+        super( ...arguments );
         return this;
-    }
-
-    /**
-     * @summary Clears the errors set
-     */
-    clear(){
-        this.#set = [];
-        this.#dep.changed();
-    }
-
-    /**
-     * @returns {TypedMessage} last error, last warning or last info message
-     *  A reactive data source
-     */
-    lastError(){
-        this.#dep.depend();
-        return this._lastFromType( TypedMessage.C.ERROR );
-    }
-
-    /**
-     * @summary Adds another error/warning to the errors set
-     * @param {Object} o
-     */
-    push( o ){
-        if( o ){
-            this.#dep.changed();
-            this.#set.push( o );
-        }
     }
 }

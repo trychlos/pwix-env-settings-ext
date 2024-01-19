@@ -1,25 +1,81 @@
 /*
  * /src/client/classes/entity-checker.class.js
  *
- * This client-only class manages the EntityChecker's for an entity.
+ * EntityChecker has for goal to:
+ * - manage error messages inside of a dialog as well as a page, whether they embed a single panel or several multi-levels tabbed sub-components
+ * - manage the global validity status at this same level.
  * 
- * Rationale:
- *  Entities may be edited, in a single page or in a single panel of a modal, or in several tabs of a tabbed page or a tabbed modal.
- *  In this later case, some events are managed at the entity level, and typically:
- *  - whether the edited entity can be saved or not (or whether the OK button is enabled or not)
- *  - the error messages list
- * 
+ * Most often, EntityChecker will receives its events from FormChecker, but not only, and any component is able to triggers EntityChecker, either
+ * through jQuery events or by calling its methods.
  * An EntityChecker doesn't manage any form by itself, but manages a global result for a whole entity, and typically an aggregation of the validity status
  * of several forms.
+ * 
+ * Error messages:
+ *  Even if we are talking about error messages, we actually manage any typed TypedMessage emitted by the sub-components. All messages sents are
+ *  stacked. The object responsible for the messages display may call the IMessageLast() interface to get the last message to be displayed.
+ *  Because FormChecker re-checks all data every time a field is valid, then the messages stack can be cleared through the IMessageClear() interface,
+ *  before being pushed again.
+ * 
+ * Validity status:
+ *  Correlatively to recurrent elementary and global checks, the validity status of the edited entiy (resp. entities) is recomputed.
+ *  EntityChecker considers that TypedMessage of 'ERROR' type are blocking and errors. All other messages do not prevent the dialog/page
+ *  to be saved.
+ * 
+ * Instanciation:
+ *  The EntiyChecker must be instanciated as a ReactiveVar content inside of an autorun() from onRendered():
+ *  ```
+ *      Template.my_app_template.onCreated( function(){
+ *          const self = this;
+ *          self.entityChecker = new ReactiveVar( null );
+ *      });
+ *      Template.my_app_template.onRendered( function(){
+ *          const self = this;
+ *          self.autorun(() => {
+ *              self.entityChecker.set( new CoreApp.EntityChecker( self, {
+ *                  options
+ *              }));
+ *          });
+ *      });
+ *  ```
+ * 
+ * Validity consolidation:
+ *  All underlying components/pane/panels/FormChecker's may advertize their own validity status through:
+ *  - a 'panel-validity' event, holding data as { emitter, ok, ... }
+ *  - a call to EntityChecker.panelValidity( emitter, ok, .. })
+ *      where:
+ *       > emitter must uniquely identify the panel, among all validity periods if relevant
+ *       > ok must be true or false, and will be and-ed with other individual validity status to provide the global one
+ *       > other datas are up to the emitter, and not kept here.
+ * 
+ * Configuration options are provided at instanciation time as an object with following keys:
+ * 
+ *  - $topmost: if set, a jQuery object which holds the main (top) dialog or page, and on which EntityChecker can connect to handle events
+ *  - $ok: if set, the jQuery object which defines the OK button (to enable/disable it)
+ *  - okSetFn( valid<Boolean> ): if set, a function to be called when OK button must be enabled / disabled
+ *  - $err: if set, the jQuery object which defines the error message place
+ *  - errSetFn( message<String> ): if set, a function to be called to display an error message
+ *  - errClearFn(): if set, a function to be called to clear all messages
+ *      Because we want re-check all fields on each input event, in the same way each input event re-triggers all error messages
+ *      So this function to let the application re-init its error messages stack.
+ *  - validityEvent: if set, the validity event sent by underlying components to advertize of their individual validity status, defaulting to 'panel-validity'
  */
 
 import _ from 'lodash';
 const assert = require( 'assert' ).strict; // up to nodejs v16.x
+import mix from '@vestergaard-company/js-mixin';
 
 import { check } from 'meteor/check';
+import { ReactiveDict } from 'meteor/reactive-dict';
 import { ReactiveVar } from 'meteor/reactive-var';
 
-export class EntityChecker {
+import { caBase } from '../../common/classes/base.class.js';
+
+import { IMessagesOrderedSet } from '../../common/interfaces/imessages-ordered-set.iface.js';
+import { IMessagesSet } from '../../common/interfaces/imessages-set.iface.js';
+import { ITypedMessage } from '../../common/interfaces/ityped-message.iface.js';
+
+//export class LooseDynRegistrar extends mix( izProvider ).with( IRegistrant, IIDGenerator, ISecretGenerator ){
+export class EntityChecker extends mix( caBase ).with( IMessagesOrderedSet, IMessagesSet ){
 
     // static data
 
@@ -27,7 +83,32 @@ export class EntityChecker {
 
     // private data
 
-    #priv = null;
+    // instanciation parameters
+    #instance = null;
+    #options = null;
+
+    // configuration
+    #defaultConf = {
+        $topmost: null,
+        $ok: null,
+        okSetFn: null,
+        $err: null,
+        errSetFn: null,
+        errClearFn: null,
+        validityEvent: 'panel-validity'
+    };
+    #conf = {};
+
+    //runtime data
+
+    // the consolidated data parts for each underlying component / pane / panel / FormChecker
+    #dataParts = new ReactiveDict();
+
+    // the entity-level validity status
+    #valid = new ReactiveVar( false );
+
+    // the subordinate FormChecker's
+    #forms = [];
 
     // private methods
 
@@ -38,55 +119,61 @@ export class EntityChecker {
     /**
      * Constructor
      * 
-     * @summary
-     *  Instanciates a new EntityChecker instance.
-     *  Should be called from Template.onRendered() function once per entity.
-     * 
-     * @param {Object} o an object with following keys:
-     *  - instance: the calling Blaze.TemplateInstance instance
-     *  - $ok: if set, the jQuery object which defines the OK button (to enable/disable it)
-     *  - okSetFn: if set, a function to be called when OK button must be enabled / disabled
-     *  - $err: if set, the jQuery object which defines the error message place
-     *  - errSetFn: if set, a function to be called to display an error message
-     *  - errClearFn: if set, a function to be called to clear all messages
-     *      Because we want re-check all fields on each input event, in the same way each input event re-triggers all error messages
-     *      So this function to let the application re-init its error messages stack.
-     * 
-     * @returns {EntityChecker} a EntityChecker object
+     * @locus Client
+     * @summary Instanciates a new EntityChecker instance
+     * @param {Blaze.TemplateInstance} instance
+     * @param {Object} opts
+     * @returns {EntityChecker} this EntityChecker instance
      */
-    constructor( o ){
+    constructor( instance, opts ){
+        super( ...arguments );
         const self = this;
 
-        assert( o && _.isObject( o ), 'expected a plain Object argument' );
-        assert( o.instance instanceof Blaze.TemplateInstance, 'instance is not a Blaze.TemplateInstance');
-        assert( !o.$ok || o.$ok.length > 0, 'when provided, $ok must be set to a jQuery object' );
-        assert( !o.okSetFn || _.isFunction( o.okSetFn ), 'when provided, okSetFn must be a function' );
-        assert( !o.$err || o.$err.length > 0, 'when provided, $err must be set to a jQuery object' );
-        assert( !o.errSetFn || _.isFunction( o.errSetFn ), 'when provided, errSetFn must be a function' );
-        assert( !o.errClearFn || _.isFunction( o.errClearFn ), 'when provided, errClearFn must be a function' );
+        assert( instance && instance instanceof Blaze.TemplateInstance, 'instance must be a Blaze.TemplateInstance');
+        assert( !opts || _.isObject( opts ), 'when set, options must be a plain javascript Object' );
+        if( opts ){
+            assert( !opts.$topmost || opts.$topmost instanceof jQuery, 'when set, options.$topmost must be a jQuery object' );
+            assert( !opts.$ok || opts.$ok instanceof jQuery, 'when set, options.$ok must be a jQuery object' );
+            assert( !opts.okSetFn || _.isFunction( opts.okSetFn ), 'when set, options.okSetFn must be a function' );
+            assert( !opts.$err || opts.$err instanceof jQuery, 'when set, options.$err must be a jQuery object' );
+            assert( !opts.errSetFn || _.isFunction( opts.errSetFn ), 'when provided, options.errSetFn must be a function' );
+            assert( !opts.errClearFn || _.isFunction( opts.errClearFn ), 'when provided, options.errClearFn must be a function' );
+        }
 
         // keep the provided params
-        this.#priv = {
-            // the parameters
-            instance: o.instance,
-            $ok: o.$ok || null,
-            okSetFn: o.okSetFn || null,
-            $err: o.$err || null,
-            errSetFn: o.errSetFn || null,
-            errClearFn: o.errClearFn || null,
-            // our internal vars
-            errorsSet: new CoreApp.MessagesSet(),
-            valid: new ReactiveVar( false )
-        };
+        this.#instance = instance;
+        this.#options = opts;
+
+        // build the configuration
+        this.#conf = _.merge( this.#conf, this.#defaultConf, opts );
+
+        // initialize runtime data
+
+        // connect to topmost element to handle 'panel-data' events
+        if( this.#conf.$topmost && this.#conf.$topmost.length ){
+            this.#conf.$topmost.on( this.#conf.validityEvent, ( event, data ) => {
+                self.panelValidity( data );
+            });
+        }
+
+        // define an autorun which reacts to dataParts changes to set the global validity status
+        this.#instance.autorun(() => {
+            let ok = true;
+            Object.keys( self.#dataParts.all()).every(( emitter ) => {
+                ok &&= self.#dataParts.get( emitter );
+                return ok;
+            });
+            self.#valid.set( ok );
+        });
 
         // define an autorun which will enable/disable the OK button depending of the entity validity status
-        o.instance.autorun(() => {
-            const valid = self.#priv.valid.get();
-            if( self.#priv.$ok ){
-                self.#priv.$ok.prop( 'disabled', !valid );
+        this.#instance.autorun(() => {
+            const valid = self.#valid.get();
+            if( self.#conf.$ok && self.#conf.$ok.length ){
+                self.#conf.$ok.prop( 'disabled', !valid );
             }
-            if( self.#priv.okSetFn ){
-                self.#priv.okSetFn( valid );
+            if( self.#conf.okSetFn ){
+                self.#conf.okSetFn( valid );
             }
         });
 
@@ -97,36 +184,51 @@ export class EntityChecker {
      * @summary Clears the error message place, and the error messages stack
      */
     errorClear(){
-        this.#priv.errorsSet.clear();
-        if( this.#priv.$err ){
+        this.IMessagesSetClear();
+        if( this.#conf.$err && this.#conf.$err.length ){
             $err.val( '' );
         }
-        if( this.#priv.errSetFn ){
-            this.#priv.errSetFn( '' );
+        if( this.#conf.errSetFn ){
+            this.#conf.errSetFn( '' );
         }
-        if( this.#priv.errClearFn ){
-            this.#priv.errClearFn();
+        if( this.#conf.errClearFn ){
+            this.#conf.errClearFn();
         }
     }
 
     /**
      * @summary Set a message
-     * @param {TypedMessage} tm
+     * @param {ITypedMessage} tm
      */
     errorSet( tm ){
-        this.#priv.errorsSet.push( tm );
-        if( this.#priv.$err ){
-            $err.val( tm.message());
+        this.IMessagesSetPush( tm );
+        if( this.#conf.$err && this.#conf.$err.length ){
+            $err.val( tm.ITypedMessageMessage());
         }
-        if( this.#priv.errSetFn ){
-            this.#priv.errSetFn( tm.message());
+        if( this.#conf.errSetFn ){
+            this.#conf.errSetFn( tm.ITypedMessageMessage());
         }
     }
 
     /**
-     * @returns {MessageSet} the error messages set object instance
+     * @summary Register a child FormChecker
+     *  When registered, FormChecker's are re-checked every time the need arises
+     * @param {FormChecker} form
      */
-    getErrorsSet(){
-        return this.#priv.errorsSet;
+    formRegister( form ){
+        this.#forms.push( form );
+    }
+
+    /**
+     * @summary Let an underlying component / pane / panel / FormChecker advertize of its individual validity status
+     * @param {Object} o with following keys:
+     *  - emitter: a unique emitter identifier
+     *  - ok: the validity status of the individual component
+     */
+    panelValidity( o ){
+        assert( o && _.isObject( o ), 'EntityChecker.panelValidity() wants a plain javascript Object' );
+        assert( o.emitter && _.isString( o.emitter ) && o.emitter.length, 'EntityChecker.panelValidity() wants an non-empty emitter' );
+        assert( o.ok && _.isBoolean( o.ok ), 'EntityChecker.panelValidity() wants a boolean validity status' );
+        this.#dataParts.set( o.emitter, o.ok );
     }
 }

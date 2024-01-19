@@ -14,7 +14,7 @@
  *  - a companion component is able to display all current error/warning/infos messages.
  * 
  * Parms:
- *  - errorsSet: a CoreApp.MessagesSet object
+ *  - errorsSet: an object compliant with the CoreApp.IMessagesOrderedSet interface
  *  - classes: classes to be added to the displayed message whatever be its type, defaulting to nothing
  */
 
@@ -37,13 +37,13 @@ Template.coreErrorMsg.helpers({
     //  because we do not want have several lines, or bold, or any other singularities here
     //  nevertheless the Blaze tempate itself is HTML-capable to be able to handle the '&nbsp;' character
     errorLabel(){
-        const o = this.errorsSet?.lastError();
-        return o ? o.label() : '&nbsp;';
+        const o = this.errorsSet?.IMessagesOrderedSetLast();
+        return o ? o.ITypedMessageMessage() : '&nbsp;';
     },
 
     // the class to be associated to the error message: may be an error, a warning, an info, etc.
     errorType(){
-        const o = this.errorsSet?.lastError();
-        return o ? o.type() : '';
+        const o = this.errorsSet?.IMessagesOrderedSetLast();
+        return o ? o.ITypedMessageType() : '';
     }
 });

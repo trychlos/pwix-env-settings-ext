@@ -15,7 +15,8 @@ checkNpmVersions({
     '@popperjs/core': '^2.11.6',
     'bootstrap': '^5.2.1',
     'ellipsize': '^0.5.1',
-    'lodash': '^4.17.0'
+    'lodash': '^4.17.0',
+    '@vestergaard-company/js-mixin': '^1.0.3'
 },
     'pwix:core-app'
 );

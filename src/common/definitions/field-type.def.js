@@ -6,7 +6,7 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 
 export const FieldType = {
 
-    C: {
+    K: {
         // info only - not modifiable
         INFO: {
             class: 'fti-info',
@@ -35,11 +35,11 @@ export const FieldType = {
 
     // check that the type is known
     _byType( type ){
-        if( !Object.keys( FieldType.C ).includes( type )){
+        if( !Object.keys( FieldType.K ).includes( type )){
             console.warn( 'FieldType: unknown type', type );
             return null;
         }
-        return FieldType.C[type];
+        return FieldType.K[type];
     },
 
     /**

@@ -6,7 +6,7 @@ import { pwixI18n } from 'meteor/pwix:i18n';
 
 export const FieldCheck = {
 
-    C: {
+    K: {
         INVALID: {
             class: 'fci-invalid',
             icon: 'fa-xmark',
@@ -31,18 +31,18 @@ export const FieldCheck = {
 
     // check that the type is known
     _byType( type ){
-        if( !Object.keys( FieldCheck.C ).includes( type )){
+        if( !Object.keys( FieldCheck.K ).includes( type )){
             console.warn( 'FieldCheck: unknown type', type );
             return null;
         }
-        return FieldCheck.C[type];
+        return FieldCheck.K[type];
     },
 
     /**
      * @returns {Array} the list of defined check types
      */
     Knowns(){
-        return Object.keys( FieldCheck.C );
+        return Object.keys( FieldCheck.K );
     },
 
     /**

@@ -14,8 +14,8 @@ import { DeclareMixin } from '@vestergaard-company/js-mixin';
 import { MessageType } from '../definitions/message-type.def.js';
 import { TypeOrder } from '../definitions/type-order.def.js';
 
-import { ITypedMessage } from '../interfaces/ityped-message.iface.js';
 import { IMessagesSet } from '../interfaces/imessages-set.iface.js';
+import { ITypedMessage } from '../interfaces/ityped-message.iface.js';
 
 export const IMessagesOrderedSet = DeclareMixin(( superclass ) => class extends superclass {
 
@@ -41,7 +41,9 @@ export const IMessagesOrderedSet = DeclareMixin(( superclass ) => class extends 
         let found = null;
         TypeOrder.Knowns().every(( type ) => {
             found = this._lastByType( MessageType.synonyms( type ));
+            return found === null;
         });
+        return found;
     }
 
     /**
@@ -50,6 +52,9 @@ export const IMessagesOrderedSet = DeclareMixin(( superclass ) => class extends 
      */
     constructor(){
         super( ...arguments );
+
+        assert( this instanceof IMessagesSet, 'the implementation class MUST also implements IMessagesSet' );
+
         return this;
     }
 
@@ -59,6 +64,7 @@ export const IMessagesOrderedSet = DeclareMixin(( superclass ) => class extends 
      */
     IMessagesOrderedSetLast(){
         this._dep.depend();
+        //console.debug( 'IMessagesOrderedSetLast()' );
         return this._lastOrdered();
     }
 });

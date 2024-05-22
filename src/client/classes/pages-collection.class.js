@@ -29,6 +29,7 @@ export class PagesCollection {
 
     /**
      * Constructor
+     * @locus Client
      * @returns {PagesCollection} the singleton instance
      */
     constructor(){

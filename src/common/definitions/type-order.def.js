@@ -23,7 +23,7 @@ export const TypeOrder = {
     ],
 
     /**
-     * @returns {Array} the list of ordeed MessageType's
+     * @returns {Array<String>} the list of ordered MessageType's
      */
     Knowns(){
         return this.K;

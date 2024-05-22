@@ -148,6 +148,7 @@ export class Page {
 
     /**
      * Constructor
+     * @locus Client
      * @param {String} name the page name
      * @param {Object} def the page definition as a javascript object
      * @returns {Page} a Page object

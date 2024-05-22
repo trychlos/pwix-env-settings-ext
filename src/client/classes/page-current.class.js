@@ -45,6 +45,7 @@ export class PageCurrent {
 
     /**
      * Constructor
+     * @locus Client
      * @returns {PageCurrent} the singleton instance
      */
     constructor(){

@@ -17,7 +17,7 @@
  *  - navClasses: classes to be added to each ul.nav element
  *  - navLinkClasses: classes to be added to each button.nav-link element
  *  - paneSubTemplate: if set, the name of a template to add below the panes
- *  - paneSubData: if set, the data context to be passed to this sub-template, defaulting to panes data context
+ *  - paneSubData: if set, the data context to be passed to this sub-template, defaulting to this coreTabbedTemplate data context
  * 
  * Data context:
  * 'coreTabbedTemplate' component increases the data context passed to navTemplate's and paneTemplate's with datas:

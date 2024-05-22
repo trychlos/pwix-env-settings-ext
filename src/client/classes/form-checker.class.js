@@ -25,15 +25,16 @@
  *  ```
  * 
  * Fields:
- *  This is a hash which defines the fields to be checked, where:
+ *  This is a madantory hash which defines the fields to be checked, where:
  *  <key> the name of the field in the 'checks' object
- *  <value> is a hash wih following keys:
- *    - children: a hash of sub-fields, for example if the schema is an array
+ *  <value> is a hash wih define the field and its behavior:
+ *    > children: a hash of sub-fields, for example if the schema is an array
  *   or:
- *    - js: the jQuery CSS selector for the INPUT/SELECT/TEXTAREA field in the DOM
- *    - display: whether the field should be updated to show valid|invalid state, default to true
- *    - val: a function to get the value from the provided item, defaulting to just getting the field value
- *    - post: a function to be called after check with the ITypedMessage result of the corresponding 'checks.check_<field>()' function
+ *    > js: a mandatory jQuery CSS selector for the INPUT/SELECT/TEXTAREA field in the DOM; it must let us address the field and its content
+ *    > display: whether the field should be updated to show valid|invalid state, defaulting to true
+ *    > valFrom(): a function to get the value from the provided item, defaulting to just getting the field value as `value = item[name]`
+ *    > valTo(): a function to set the value into the provided item, defaulting to just setting the field value as item[name] = value
+ *    > post: a function to be called after check with the ITypedMessage result of the corresponding 'checks.check_<field>()' function
  * 
  * Configuration options are provided at instanciation time as an object with following keys:
  * 
@@ -145,6 +146,7 @@ export class FormChecker extends caBase {
                     break
             }
         }
+        //console.debug( eltData, err, check );
         return check;
     }
 
@@ -212,6 +214,7 @@ export class FormChecker extends caBase {
                     return _.isFunction( self.#conf.checks[fn] ) ? self.#conf.checks[fn]( value, self.#conf.data, opts ) : null;
                 })
                 .then(( err ) => {
+                    //console.debug( eltData, err );
                     check( err, Match.OneOf( null, CoreApp.TypedMessage ));
                     const valid = self._computeValid( eltData, err );
                     self.#valid.set( valid );
@@ -310,6 +313,7 @@ export class FormChecker extends caBase {
     // iterate on each field definition, calling the provided 'cb' callback for each one
     //  when 'children' are defined, iterate on the children
     //  the recursive iteration stops as soon as the 'cb' doesn't return true
+    //  in other words, iterate while 'cb' returns true (same than every instruction)
     _fieldsIterate( cb, args=null ){
         const self = this;
         const _fields_iterate_f = function( args, field, defn, parent=null ){
@@ -377,8 +381,8 @@ export class FormChecker extends caBase {
     // set the value from the item to the form field according to the type of field
     _valueTo( eltData, item ){
         let value = null;
-        if( eltData.defn.val ){
-            value = eltData.defn.val( item );
+        if( eltData.defn.valTo ){
+            value = eltData.defn.valTo( item );
         } else {
             value = item[eltData.field];
         }
@@ -407,14 +411,13 @@ export class FormChecker extends caBase {
     /**
      * Constructor
      * @locus Client
-     * 
-     * @summary Instanciates a new EntityChecker instance
+     * @summary Instanciates a new FormChecker instance
      * @param {Blaze.TemplateInstance} instance
      * @param {Object} fields
      * @param {Object} opts
      * @returns {FormChecker} this FormChecker instance
      */
-    constructor( instance, fields, opts ){
+    constructor( instance, fields, opts={} ){
         super( ...arguments );
         const self = this;
 
@@ -465,7 +468,7 @@ export class FormChecker extends caBase {
         // for each field to be checked, define its own internal check function
         this._fieldsIterate( this._defineLocalFunction );
 
-        //console.debug( this );
+        console.debug( this );
         return this;
     }
 
@@ -581,7 +584,7 @@ export class FormChecker extends caBase {
      */
     async inputHandler( event, opts={} ){
         // an event addressed to another formChecker, or already handled by another FormChecker
-        if(( event.originalEvent['FormChecker'] || {} ).handled === true ){
+        if( event.data && event.data.FormChecker && event.data.FormChecker.handled === true ){
             return Promise.resolve( null );
         // not already handled, so try to handle it here
         } else {
@@ -590,11 +593,14 @@ export class FormChecker extends caBase {
             if( !o || !this[ o.fn ] ){
                 return Promise.resolve( null );
             }
-            event.originalEvent['FormChecker'] = { handled: true };
+            event.data = event.data || {};
+            event.data.FormChecker = event.data.FormChecker || {};
+            event.data.FormChecker.handled = true;
+            console.debug( event.type, event.data );
             return this[ o.fn ]( o, opts )
                 .then(( valid ) => {
                     if( valid && this.#conf.inputOkCheckAll !== false ){
-                        const parms = { field: o.field, update: false };
+                        const parms = { field: o.field, update: false, display: false };
                         return this.#conf.entityChecker ? this.#conf.entityChecker.check( parms ) : this.check( parms );
                     }
                     return valid;
@@ -605,10 +611,12 @@ export class FormChecker extends caBase {
     /**
      * @summary set options to be passed to the form checkers
      * @param {Object} data
+     * @returns {FormChecker} this instance
      */
     setData( data ){
         //console.debug( 'setData()', data );
         this.#conf.data = data || {};
+        return this;
     }
 
     /**
@@ -631,9 +639,11 @@ export class FormChecker extends caBase {
      * @param {Object} item
      * @param {Object} opts an option object with following keys:
      *  $parent: when set, the DOM parent of the targeted form - in case of an array
+     * @returns {FormChecker} this instance
      */
     setForm( item, opts={} ){
         const self = this;
+        console.warn( 'setForm' );
         const cb = function( args, field, defn, parent ){
             if( defn.js ){
                 let $js = null;
@@ -658,6 +668,7 @@ export class FormChecker extends caBase {
             return true;
         };
         this._fieldsIterate( cb );
+        return this;
     }
 
     /**

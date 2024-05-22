@@ -22,13 +22,16 @@ export const MessageType = {
 _.merge( MessageType, {
     K: [
         {
-            id: MessageType.C.EMERG
-        },
-        {
             id: MessageType.C.ALERT
         },
         {
             id: MessageType.C.CRIT
+        },
+        {
+            id: MessageType.C.DEBUG
+        },
+        {
+            id: MessageType.C.EMERG
         },
         {
             id: MessageType.C.ERR
@@ -38,20 +41,17 @@ _.merge( MessageType, {
             synonym: MessageType.C.ERR
         },
         {
-            id: MessageType.C.WARNING
-        },
-        {
-            id: MessageType.C.NOTICE
+            id: MessageType.C.INFO
         },
         {
             id: MessageType.C.LOG,    // not described in man 3 syslog, but used here as a default value and a synonym for INFO
             synonym: MessageType.C.INFO
         },
         {
-            id: MessageType.C.INFO
+            id: MessageType.C.NOTICE
         },
         {
-            id: MessageType.C.DEBUG
+            id: MessageType.C.WARNING
         }
     ],
     DefaultType: MessageType.C.LOG,
@@ -104,14 +104,16 @@ _.merge( MessageType, {
 
     /**
      * @param {String} id the identifier of the type
-     * @returns {Array} the list of synonyms for this one
+     * @returns {Array<String>} the list of synonyms for this one
      */
     synonyms( id ){
         let array = {};
         array[id] = true;
+        const self = this;
         this.Knowns().every(( def ) => {
-            if( this.id( def ) !== id && this.synonym( def ) === id ){
-                array[this.id()] = true;
+            const def_id = self.id( def );
+            if( def_id !== id && self.synonym( def ) === id ){
+                array[def_id] = true;
             }
             return true;
         });

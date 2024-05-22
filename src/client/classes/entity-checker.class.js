@@ -12,8 +12,8 @@
  * 
  * Error messages:
  *  Even if we are talking about error messages, we actually manage any typed TypedMessage emitted by the sub-components. All messages sents are
- *  stacked. The object responsible for the messages display may call the IMessageLast() interface to get the last message to be displayed.
- *  Because FormChecker re-checks all data every time a field is valid, then the messages stack can be cleared through the IMessageClear() interface,
+ *  stacked. The object responsible for the messages display may call the IMessagesOrderedSetLast() interface to get the last message to be displayed.
+ *  Because FormChecker re-checks all data every time a field is valid, then the messages stack can be cleared through the IMessagesSetClear() interface,
  *  before being pushed again.
  * 
  * Validity status:
@@ -118,14 +118,13 @@ export class EntityChecker extends mix( caBase ).with( IMessagesOrderedSet, IMes
 
     /**
      * Constructor
-     * 
      * @locus Client
      * @summary Instanciates a new EntityChecker instance
      * @param {Blaze.TemplateInstance} instance
      * @param {Object} opts
      * @returns {EntityChecker} this EntityChecker instance
      */
-    constructor( instance, opts ){
+    constructor( instance, opts={} ){
         super( ...arguments );
         const self = this;
 
@@ -177,6 +176,7 @@ export class EntityChecker extends mix( caBase ).with( IMessagesOrderedSet, IMes
             }
         });
 
+        console.debug( this );
         return this;
     }
 
@@ -195,7 +195,7 @@ export class EntityChecker extends mix( caBase ).with( IMessagesOrderedSet, IMes
      * 
      * This doesn't return anything.
      */
-    check(){
+    check( opts={} ){
         this.errorClear();
         let promises = [];
         this.#forms.every(( form ) => {

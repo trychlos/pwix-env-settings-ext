@@ -41,7 +41,8 @@ export const IMessagesSet = DeclareMixin(( superclass ) => class extends supercl
     /**
      * @summary Clears the message stack
      */
-    IMessageSetClear(){
+    IMessagesSetClear(){
+        //console.debug( 'IMessagesSetClear()' );
         this._set = [];
         this._dep.changed();
     }
@@ -49,7 +50,7 @@ export const IMessagesSet = DeclareMixin(( superclass ) => class extends supercl
     /**
      * @summary Dumps the message stack
      */
-    IMessageSetDump(){
+    IMessagesSetDump(){
         this._set.every(( tm ) => {
             console.debug( 'IMessageSetDump()', tm );
             return true;
@@ -60,15 +61,16 @@ export const IMessagesSet = DeclareMixin(( superclass ) => class extends supercl
     /**
      * @returns {ITypedMessage} the last pushed message
      */
-    IMessageSetLast(){
+    IMessagesSetLast(){
         return this._set.length > 0 ? this._set[this._set.length-1] : null;
     }
 
     /**
      * @param {ITypedMessage} the message to be pushed
      */
-    IMessageSetPush( tm ){
+    IMessagesSetPush( tm ){
         assert( tm && tm instanceof ITypedMessage, 'IMessageSetPush() tm must be a ITypedMessage' )
+        //console.debug( 'IMessagesSetPush()', tm );
         this._set.push( tm );
         this._dep.changed();
     }

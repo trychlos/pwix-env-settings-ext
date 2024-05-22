@@ -2,14 +2,14 @@
 
 ## What is it ?
 
-A Meteor package which embeds our UI initializations.
+A Meteor package which embeds our application initializations, both on client and server sides.
 
 This package:
 
 - is not designed to be published (probably cannot be used in any application)
 - is expected to be added to an application (not required by a package), bringing with it most common dependencies.
 
-It materializes our design decisions about user interface:
+It materializes our design decisions about user interface and server code architecture:
 
 - deep copy, deep equal and other Object functions are handled by lodash, and check_npms takes care of requiring it
 - it is Bootstrap-based, so check_npms takes care of requiring @popperjs/core and bootstrap

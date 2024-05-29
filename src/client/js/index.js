@@ -4,6 +4,7 @@
 
 import '../../common/js/index.js';
 
+/*
 // 2023.06: @popperjs/core 2.11.8
 // 2023.06: bootstrap 5.3.0
 import '@popperjs/core/dist/cjs/popper.js';
@@ -31,3 +32,4 @@ CoreApp.PagesCollection = PagesCollection;
 
 // our functions
 import './DOM.js';
+*/

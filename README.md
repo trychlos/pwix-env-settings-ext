@@ -27,7 +27,7 @@ While `nodejs` defines only three environments (`development`, `staging` and `pr
 
 We so use the `APP_ENV` environment variable to address our own environment identifier. Through this identifier, we ask the server to publish the setings recorded inside of its private settings (see `pwix:env-settings`).
 
-The settings are read from the server settings for this environment through the path `Meteor.settings[APP.name].environments[<environment_identifer>]`.
+The settings are read from the server settings for this environment through the path `Meteor.settings[APP.name].environments[<environment_identifier>]`.
 
 If not specified in the `APP_ENV` variable, the environment identifier falls back to the `nodejs` environment name.
 
@@ -217,7 +217,7 @@ Parameters can be provided:
 
 ## NPM peer dependencies
 
-Starting with v 0.3.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`. 
+Starting with v 0.3.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`. 
 
 Instead we check npm versions of installed packages at runtime, on server startup, in development environment.
 

@@ -9,9 +9,9 @@ CoreApp._conf = {};
 CoreApp._defaults = {
     adminRole: 'APP_ADMINISTRATOR',
     menuIcon: 'fa-chevron-right',
-    routePrefix: '/coreUI',
+    routePrefix: '/coreApp',
     theme: 't-page',
-    verbosity: CoreApp.C.Verbose.NONE
+    verbosity: CoreApp.C.Verbose.CONFIGURE
 };
 
 /**

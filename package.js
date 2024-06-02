@@ -37,7 +37,7 @@ function configure( api ){
     // pwix packages are used by dependancy level/alpha
     // level zero
     _use( 'pwix:blaze-layout@2.3.2' );
-    _use( 'pwix:env-settings@1.6.0' );
+    _use( 'pwix:env-settings@1.6.0 || 2.0.0-rc' );
     _use( 'pwix:i18n@1.5.7' );
     _use( 'pwix:jquery-ui@1.0.3' );
     _use( 'pwix:jstree@1.0.6' );
@@ -56,12 +56,12 @@ function configure( api ){
     _use( 'pwix:bootbox@1.5.5' );
     _use( 'pwix:cookie-manager@1.4.1' );
     _use( 'pwix:modal-info@1.4.4' );
-    //_use( 'pwix:roles@1.1.3' );
+    _use( 'pwix:roles@1.3.0' );
     // level 4
     _use( 'pwix:accounts-ui@1.5.0' );
     //_use( 'pwix:forums@1.1.3' );
     // level 5
-    //_use( 'pwix:startup-app-admin@1.1.3' );
+    _use( 'pwix:startup-app-admin@1.3.0' );
     _use( 'reactive-dict' );
     _use( 'reactive-var' );
     _use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );

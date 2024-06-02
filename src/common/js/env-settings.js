@@ -1,59 +1,10 @@
 /*
  * pwix:core-app/src/common/js/env-settings.js
- *
- * Setup a copy of the server settings for this running environment, available on both the client and the server.
- * 
- * Note that the Meteor.APP.environmentSettings ReactiveVar is initialized to null at init time.
- * It is then set as the result of an asynchronous method call on client side; the result may thus be delayed.
- * Use of this variable should so be done inside of an autorun() section, and be prepared to get a null value.
  */
 
 import _ from 'lodash';
 
 import { Tracker } from 'meteor/tracker';
-
-if( Meteor.isClient ){
-}
-
-if( Meteor.isServer ){
-    // define the method to be called from the client
-    Meteor.methods({
-        // return an object { env, settings } containing the server settings available for the current environment
-        'settings.environment'(){
-            if( !Object.keys( process.env ).includes( 'APP_ENV' )){
-                console.warn( 'process.env.APP_ENV is unset (but should)' );
-                return {};
-            }
-            const env = process.env.APP_ENV || Meteor.settings.runtime.env;
-            const o = {
-                env: env,
-                settings: Meteor.settings[Meteor.APP.name].environments[env] || {}
-            };
-            return o;
-        }
-    });
-}
-
-// common part 
-//
-// Setup a copy of the server settings for this running environment, available on both the client and the server.
-// 
-// Note that the Meteor.APP.envSettings ReactiveVar is initialized to null at init time.
-// It is then set as the result of an asynchronous method call on client side; the result may thus be delayed.
-// Use of this variable should so be done inside of an autorun() section, and be prepared to get a null value.
-//
-// this is run on both on server and client side
-//  so that envSettings may be used to have some environment-dependant configuration parms
-
-Meteor.startup(() => {
-    Meteor.call( 'settings.environment', ( err, res ) => {
-        if( err ){
-            console.error( err );
-        } else {
-            CoreApp.envSettings.set( res );
-        }
-    });
-});
 
 // let the environment settings override part of the default package configuration provided by the application for this particular environment
 // it expects the following hierarchy:

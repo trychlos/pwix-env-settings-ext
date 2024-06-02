@@ -2,19 +2,20 @@
  * pwix:core-app/src/common/js/index.js
  */
 
-import { MessagesOrderedSet } from '../classes/messages-ordered-set.class.js';
-import { MessagesSet } from '../classes/messages-set.class.js';
-import { TypedMessage } from '../classes/typed-message.class.js';
+import { caBase } from '../classes/base.class';
+import { MessagesOrderedSet } from '../classes/messages-ordered-set.class';
+import { MessagesSet } from '../classes/messages-set.class';
+import { TypedMessage } from '../classes/typed-message.class';
 
-import { FieldCheck } from '../definitions/field-check.def.js';
-import { FieldType } from '../definitions/field-type.def.js';
-import { MessageType } from '../definitions/message-type.def.js';
-import { TypeOrder } from '../definitions/type-order.def.js';
-import { YesNo } from '../definitions/yesno.def.js';
+import { FieldCheck } from '../definitions/field-check.def';
+import { FieldType } from '../definitions/field-type.def';
+import { MessageType } from '../definitions/message-type.def';
+import { TypeOrder } from '../definitions/type-order.def';
+import { YesNo } from '../definitions/yesno.def';
 
-import { IMessagesOrderedSet } from '../interfaces/imessages-ordered-set.iface.js';
-import { IMessagesSet } from '../interfaces/imessages-set.iface.js';
-import { ITypedMessage } from '../interfaces/ityped-message.iface.js';
+import { IMessagesOrderedSet } from '../interfaces/imessages-ordered-set.iface';
+import { IMessagesSet } from '../interfaces/imessages-set.iface';
+import { ITypedMessage } from '../interfaces/ityped-message.iface';
 
 import './global.js';
 import './constants.js';
@@ -24,6 +25,7 @@ import './date.js';
 import './env-settings.js';
 import './i18n.js';
 
+CoreApp.Base = caBase;
 CoreApp.MessagesOrderedSet = MessagesOrderedSet;
 CoreApp.MessagesSet = MessagesSet;
 CoreApp.TypedMessage = TypedMessage;

@@ -65,11 +65,12 @@ export class DisplaySet extends caBase {
      * @param {Any} arg an optional argument to be provided to the cb() callback
      */
     enumerate( cb, arg=null ){
+        const self = this;
         if( !cb || !_.isFunction( cb )){
             console.error( 'expected a function, found', cb );
         } else {
-            Object.keys( this.#set ).sort().every(( key ) => {
-                return cb( key, this.#set[key], arg );
+            Object.keys( self.#set ).sort().every(( key ) => {
+                return cb( key, self.#set[key], arg );
             });
         }
     }

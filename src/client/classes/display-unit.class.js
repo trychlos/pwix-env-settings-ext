@@ -212,18 +212,13 @@ export class DisplayUnit extends caBase {
      * @returns {Promise} which resolves to a Boolean with value=true if the current page is scoped.
      *  A page is said 'scoped':
      *  - if it is qualified with 'wantScope=true' in the pages definition (/imports/client/init/pages.js)
-     *  - or if one of the AccessRoles it requires, and that the current user holds, is itself scoped (qualified as such in the roles hierarchy definition)
+     *  - or if one of the AccessRoles it requires is itself scoped (qualified as such in the roles hierarchy definition)
      *  - or if the roleAssignment of this role for this user is itself scoped
      */
     wantScope(){
         let promises = [];
         const pageIsScoped = this.get( 'wantScope' ) || false;
         let wantScope = pageIsScoped;
-        if( wantScope ){
-            promises.push( Promise.resolve( true ));
-        } else {
-            wantScope = Meteor.APP.runContext.userHasScope();
-        }
         if( wantScope ){
             promises.push( Promise.resolve( true ));
         } else {

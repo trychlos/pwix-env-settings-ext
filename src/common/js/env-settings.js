@@ -5,31 +5,46 @@
 import _ from 'lodash';
 
 import { Tracker } from 'meteor/tracker';
+import { EnvSettings } from 'meteor/pwix:env-settings';
 
-// let the environment settings override part of the default package configuration provided by the application for this particular environment
-// it expects the following hierarchy:
-//      "packages": {
-//          "pwix:accounts-ui": {               the name of the package
-//              "global": "AccountsUI",         the name of the exported global which holds the configure() function
-//              "conf": {                       the list of overriden keys for this environment
-//                  "passwordLength": 4,            as either a value or a constant
-//                  "passwordStrength": {
-//                      "constant": "AccountsUI.C.Password.VERYWEAK"
-//                  }
-//              }
-//          }
-//      }
+/**
+ * @summary When the pwix:env-settings is ready, take two actions:
+ *  - have a copy of the environment available to the client
+ *  - maybe reconfigure packages if these environment settings are configured for
+ * This is called by the application because the EnvSettings.onReady() function is a configuration option,
+ * and only the application should configure a package (unless the exception above).
+ */
+CoreApp.onEnvSettingsReady = function(){
+    // this CoreApp must have been configured with the application name
+    check( CoreApp._conf.appName, String );
 
-Tracker.autorun(() => {
-    const res = CoreApp.envSettings.get();
-    if( res && res.settings && res.settings.packages ){
-        Object.keys( res.settings.packages ).every(( pck ) => {
-            if( Object.keys( res.settings.packages[pck] ).includes( 'global' )){
-                const global = res.settings.packages[pck].global;
-                if( Object.keys( res.settings.packages[pck] ).includes( 'conf' )){
+    const env = Meteor.settings.public.runtime.env;
+    const settings = Meteor.settings[CoreApp._conf.appName].environments[env];
+    // copy to the client the environment context
+    Meteor.settings.public[CoreApp._conf.appName].environment = settings;
+    console.debug( 'pwix:env-settings.onReady() environment settings copied to public object' );
+
+    // let the environment settings override part of the default package configuration provided by the application for this particular environment
+    // it expects the following hierarchy:
+    //      "packages": {
+    //          "pwix:accounts-ui": {               the name of the package
+    //              "global": "AccountsUI",         the name of the exported global which holds the configure() function
+    //              "conf": {                       the list of overriden keys for this environment
+    //                  "passwordLength": 4,            as either a value or a constant
+    //                  "passwordStrength": {
+    //                      "constant": "AccountsUI.C.Password.VERYWEAK"
+    //                  }
+    //              }
+    //          }
+    //      }
+    if( settings.packages ){
+        Object.keys( settings.packages ).every(( pck ) => {
+            if( Object.keys( settings.packages[pck] ).includes( 'global' )){
+                const global = settings.packages[pck].global;
+                if( Object.keys( settings.packages[pck] ).includes( 'conf' )){
                     let conf = {};
-                    Object.keys( res.settings.packages[pck].conf ).every(( key ) => {
-                        let val = res.settings.packages[pck].conf[key];
+                    Object.keys( settings.packages[pck].conf ).every(( key ) => {
+                        let val = settings.packages[pck].conf[key];
                         if( val ){
                             if( _.isString( val )){
                                 conf[key] = val;
@@ -52,11 +67,11 @@ Tracker.autorun(() => {
                         }
                         return true;
                     });
-                    //console.debug( 'calling', pck, global+'.configure() with', conf );
+                    console.debug( 'calling', pck, global+'.configure() with', conf );
                     Package[pck][global].configure( conf );
                 }
             }
             return true;
         });
     }
-});
+}

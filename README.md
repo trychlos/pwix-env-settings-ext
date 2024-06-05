@@ -103,13 +103,11 @@ Known configuration options are:
 
     Default to `/coreUI`.
 
-- `theme`
+- `classes`
 
-    Define the name of the default theme for a page which doesn't define it.
+    A list of classes to be added to display units.
 
-    Default to 't-page'.
-
-    This theme is expected to be provided by the application.
+    Default to `[ 't-page' ]`.
 
 - `verbosity`
 

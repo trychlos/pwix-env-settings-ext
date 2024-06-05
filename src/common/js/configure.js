@@ -7,10 +7,11 @@ import _ from 'lodash';
 CoreApp._conf = {};
 
 CoreApp._defaults = {
+    appName: null,
     adminRole: 'APP_ADMINISTRATOR',
     menuIcon: 'fa-chevron-right',
     routePrefix: '/coreApp',
-    theme: 't-page',
+    classes: [ 't-page' ],
     verbosity: CoreApp.C.Verbose.CONFIGURE
 };
 

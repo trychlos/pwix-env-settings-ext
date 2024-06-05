@@ -12,6 +12,11 @@
  *                      Type: String
  *                      MANDATORY (no default).
  * 
+ *  - classes
+ *                      Type: Array<String>
+ *                      The classes to be added.
+ *                      Defaulting to[ 't-page' ] as configured.
+ * 
  *  - inMenus
  *                      Definition type: String or Array of strings
  *                      Returned type: Array of strings
@@ -52,11 +57,6 @@
  *  - templateParms
  *                      Type: Object
  *                      Parameters to be passed to the template, defaulting to none.
- * 
- *  - theme
- *                      Type: String
- *                      The theme to be applied.
- *                      Defaulting to 't-page' as configured.
  * 
  *  - wantEditionSwitch
  *                      Whether we want a 'edit now' toggle switch on the top of the page
@@ -178,7 +178,7 @@ export class DisplayUnit extends caBase {
         this._checkString( def, 'route' );
         this._checkString( def, 'template' );
         this._checkObjectOrFunction( def, 'templateParms' );
-        this._checkString( def, 'theme', CoreApp._conf.theme );
+        this._checkStringOrArray( def, 'classes', CoreApp._conf.classes );
         this._checkBoolean( def, 'wantEditionSwitch', false );
 
         this.#name = name;
@@ -209,31 +209,23 @@ export class DisplayUnit extends caBase {
     }
 
     /**
-     * @returns {Promise} which resolves to a Boolean with value=true if the current page is scoped.
+     * @returns {Boolean} with value=true if the current page is scoped.
      *  A page is said 'scoped':
      *  - if it is qualified with 'wantScope=true' in the pages definition (/imports/client/init/pages.js)
      *  - or if one of the AccessRoles it requires is itself scoped (qualified as such in the roles hierarchy definition)
      *  - or if the roleAssignment of this role for this user is itself scoped
      */
     wantScope(){
-        let promises = [];
-        const pageIsScoped = this.get( 'wantScope' ) || false;
-        let wantScope = pageIsScoped;
-        if( wantScope ){
-            promises.push( Promise.resolve( true ));
-        } else {
-            this.get( 'rolesAccess' ).every(( role ) => {
-                return alRoles.userIsInRoleAsync( Meteor.userId(), role, { anyScope: true })
-                    .then(( res ) => {
-                        if( Roles.isRoleScoped( role )){
-                            wantScope = true;
-                            promises.push( Promise.resolve( true ));
-                        }
-                        return !wantScope;
-                    });
-                
-                });
+        if( this.get( 'wantScope' )){
+            return true;
         }
-        return Promise.all( promises );
+        let wantScope = false;
+        this.get( 'rolesAccess' ).every(( role ) => {
+            if( Roles.isRoleScoped( role )){
+                wantScope = true;
+                return !wantScope;
+            }
+        });
+        return wantScope;
     }
 }

@@ -41,11 +41,12 @@ function configure( api ){
     _use( 'pwix:i18n@1.5.7' );
     _use( 'pwix:jquery-ui@1.0.3' );
     _use( 'pwix:jstree@1.0.6' );
-    _use( 'pwix:layout@1.3.1' );
     _use( 'pwix:plus-button@0.11.2' );
     _use( 'pwix:ssr@0.9.0-rc' );
     _use( 'pwix:toggle-switch@0.3.3' );
     _use( 'pwix:tolert@1.4.2' );
+    //_use( 'pwix:ui-layout@2.0.0-rc' );
+    //_use( 'pwix:ui-utils@0.9.0-rc' );
     // level 1
     _use( 'pwix:editor@1.4.1' );
     _use( 'pwix:options@2.1.1' );
@@ -62,6 +63,10 @@ function configure( api ){
     //_use( 'pwix:forums@1.1.3' );
     // level 5
     _use( 'pwix:startup-app-admin@1.3.0' );
+    // new/unleveled
+    _use( 'pwix:accounts-manager@0.9.0-rc' );
+    _use( 'pwix:tabular-ext@0.9.0-rc' );
+    // others...
     _use( 'reactive-dict' );
     _use( 'reactive-var' );
     _use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
@@ -75,16 +80,6 @@ function configure( api ){
     api.addFiles( 'src/client/components/coreLegalsLink/coreLegalsLink.js', 'client' );
     api.addFiles( 'src/client/components/coreTabbedTemplate/coreTabbedTemplate.js', 'client' );
     api.addFiles( 'src/client/components/coreYesnoSelect/coreYesnoSelect.js', 'client' );
-    api.addAssets([
-        'src/client/icons/external-link-black.png',
-        'src/client/icons/external-link-white.png',
-        'src/client/icons/external-pdf-black.png',
-        'src/client/icons/external-pdf-white.png',
-        'src/client/icons/svgrepo-471618-link-external.svg'
-    ],
-        'client'
-    );
-    api.addFiles( 'src/client/stylesheets/core_app.less', 'client', { isImport: true });
 }
 
 // NPM dependencies are checked in /src/server/js/check_npms.js

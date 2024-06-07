@@ -76,7 +76,6 @@ import _ from 'lodash';
 
 import { check } from 'meteor/check';
 import { Roles } from 'meteor/pwix:roles';
-import { Roles as alRoles } from 'meteor/alanning:roles';
 
 import { caBase } from '../../common/classes/base.class';
 
@@ -170,6 +169,7 @@ export class DisplayUnit extends caBase {
         // may throw an error
         check( name, String );
 
+        this._checkStringOrArray( def, 'classes', CoreApp._conf.classes );
         this._checkStringOrArray( def, 'inMenus', [] );
         this._checkString( def, 'menuIcon', CoreApp._conf.menuIcon );
         this._checkString( def, 'menuLabel' );
@@ -178,7 +178,6 @@ export class DisplayUnit extends caBase {
         this._checkString( def, 'route' );
         this._checkString( def, 'template' );
         this._checkObjectOrFunction( def, 'templateParms' );
-        this._checkStringOrArray( def, 'classes', CoreApp._conf.classes );
         this._checkBoolean( def, 'wantEditionSwitch', false );
 
         this.#name = name;

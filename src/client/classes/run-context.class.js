@@ -21,7 +21,7 @@ export class RunContext extends caBase {
 
     // private data
 
-    #asked = new ReactiveVar( false );
+    #editionAsked = new ReactiveVar( false );
     #dataContext = new ReactiveVar( null );
     #page = new ReactiveVar( null );
     #roles = new ReactiveVar( null );
@@ -34,18 +34,14 @@ export class RunContext extends caBase {
 
     /**
      * Constructor
-     * @param {Object} o an optional parameters object, managing following keys:
-     *  - title: the initial application title
      * @returns {RunContext} this instance
      */
     constructor( o ){
         super( ...arguments );
         const self = this;
 
-        // set up provided arguments
-        if( o && o.title ){
-            this.title( o.title );
-        }
+        // initialize the default application title to its name
+        this.title( CoreApp._conf.appName );
 
         // an autorun tracker which dynamically tracks the currently connected user
         Tracker.autorun(() => {
@@ -81,6 +77,13 @@ export class RunContext extends caBase {
             }
         });
 
+        // an autorun tracker reset the editionAsked reactive var each time the user logs out
+        Tracker.autorun(() => {
+            if( !Meteor.userId()){
+                self.editionAsked( false );
+            }
+        });
+
         return this;
     }
 
@@ -101,23 +104,6 @@ export class RunContext extends caBase {
             }
         }
         return false;
-    }
-
-    /**
-     * Getter/Setter
-     * @summary
-     *  Edition management
-     *  The application use db-stored documents and manage there its translations
-     *  Documents can be edited online in dev environment
-     * @param {Boolean} b the optional 'asked' status, i.e. whether the used has asked for editing the current page
-     * @returns {Boolean} the current asked edition status
-     */
-    asked( b ){
-        if( b === true || b === false ){
-            check( b, Boolean );
-            this.#asked.set( b );
-        }
-        return this.#asked.get();
     }
 
     /**
@@ -152,6 +138,23 @@ export class RunContext extends caBase {
             return Roles.userIsInRoles( user, page.get( 'rolesEdit' ), { anyScope: true });
         }
         return false;
+    }
+
+    /**
+     * Getter/Setter
+     * @summary
+     *  Edition management
+     *  The application use db-stored documents and manage there its translations
+     *  Documents can be edited online in dev environment
+     * @param {Boolean} b the optional 'asked' status, i.e. whether the used has asked for editing the current page
+     * @returns {Boolean} the current asked edition status
+     */
+    editionAsked( b ){
+        if( b === true || b === false ){
+            check( b, Boolean );
+            this.#editionAsked.set( b );
+        }
+        return this.#editionAsked.get();
     }
 
     /**

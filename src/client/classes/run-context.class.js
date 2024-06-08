@@ -152,9 +152,18 @@ export class RunContext extends caBase {
     editionAsked( b ){
         if( b === true || b === false ){
             check( b, Boolean );
+            //console.debug( 'editionAsked', b );
             this.#editionAsked.set( b );
         }
         return this.#editionAsked.get();
+    }
+
+    /**
+     * Getter
+     * @returns {Boolean} whether a user is currently logged-in
+     */
+    isConnected(){
+        return Meteor.userId() !== null;
     }
 
     /**
@@ -175,22 +184,6 @@ export class RunContext extends caBase {
     }
 
     /**
-     * Getter
-     * @summary
-     *  The returned object is passed as a template datacontext from app_layout to below sub-templates.
-     *  Data is so made reactive and the display is expected to be refreshed on data changes
-     * @returns {Object} the current running context as a plain Javascript object to be used as data template
-     */
-    plainContext(){
-        return {
-            isConnected: Meteor.userId() !== null,
-            title: this.title(),
-            wantFooter: true,
-            wantHeader: true
-        };
-    }
-
-    /**
      * Getter/Setter
      * @summary
      *  The title of the application defaults to its name as the constant `Meteor.APP.name`.
@@ -205,5 +198,21 @@ export class RunContext extends caBase {
             this.#title.set( s );
         }
         return this.#title.get();
+    }
+
+    /**
+     * Getter
+     * @returns {Boolean} whether we want display the page footer regarding the current run context
+     */
+    wantFooter(){
+        return true;
+    }
+
+    /**
+     * Getter
+     * @returns {Boolean} whether we want display the page header regarding the current run context
+     */
+    wantHeader(){
+        return true;
     }
 }

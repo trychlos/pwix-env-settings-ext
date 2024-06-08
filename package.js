@@ -45,17 +45,18 @@ function configure( api ){
     _use( 'pwix:ssr@0.9.0-rc' );
     _use( 'pwix:toggle-switch@0.3.3' );
     _use( 'pwix:tolert@1.4.2' );
-    //_use( 'pwix:ui-layout@2.0.0-rc' );
-    //_use( 'pwix:ui-utils@0.9.0-rc' );
+    _use( 'pwix:ui-fontawesome6@1.0.0-rc' );
+    _use( 'pwix:ui-layout@2.0.0-rc' );
+    _use( 'pwix:ui-utils@1.0.0-rc' );
     // level 1
     _use( 'pwix:editor@1.4.1' );
     _use( 'pwix:options@2.1.1' );
     // level 2
-    _use( 'pwix:accounts-tools@2.0.0' );
-    _use( 'pwix:modal@1.10.0' );
+    _use( 'pwix:accounts-tools@2.0.0 || 2.1.0-rc' );
+    _use( 'pwix:modal@1.10.0 || 2.0.0' );
     // level 3
     _use( 'pwix:bootbox@1.5.5' );
-    _use( 'pwix:cookie-manager@1.4.1' );
+    _use( 'pwix:cookie-manager@2.0.0' );
     _use( 'pwix:modal-info@1.4.4' );
     _use( 'pwix:roles@1.3.0' );
     // level 4
@@ -64,8 +65,8 @@ function configure( api ){
     // level 5
     _use( 'pwix:startup-app-admin@1.3.0' );
     // new/unleveled
-    _use( 'pwix:accounts-manager@0.9.0-rc' );
-    _use( 'pwix:tabular-ext@0.9.0-rc' );
+    //_use( 'pwix:accounts-manager@0.9.0-rc' );
+    //_use( 'pwix:tabular-ext@0.9.0-rc' );
     // others...
     _use( 'reactive-dict' );
     _use( 'reactive-var' );

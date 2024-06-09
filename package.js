@@ -45,6 +45,7 @@ function configure( api ){
     _use( 'pwix:ssr@0.9.0-rc' );
     _use( 'pwix:toggle-switch@0.3.3' );
     _use( 'pwix:tolert@1.4.2' );
+    _use( 'pwix:ui-bootstrap5@2.0.0' );
     _use( 'pwix:ui-fontawesome6@1.0.0-rc' );
     _use( 'pwix:ui-layout@2.0.0-rc' );
     _use( 'pwix:ui-utils@1.0.0-rc' );

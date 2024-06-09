@@ -4,12 +4,6 @@
 
 import '../../common/js/index.js';
 
-// 2023.06: @popperjs/core 2.11.8
-// 2023.06: bootstrap 5.3.0
-import '@popperjs/core/dist/cjs/popper.js';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
-
 // provides base classes in CoreApp global object
 import { DisplaySet } from '../classes/display-set.class';
 import { DisplayUnit } from '../classes/display-unit.class';

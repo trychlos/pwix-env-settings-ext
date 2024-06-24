@@ -2,7 +2,7 @@
 
 ## What is it ?
 
-A Meteor package which embeds our application initializations, both on client and server sides.
+A meta-package which embeds our application most common codes, both on client and server sides.
 
 This package:
 
@@ -75,76 +75,22 @@ Each class may be used as is, and can also be derived by the application.
 
 `pwix:core-app` the settings dedicated to the current environment as the `CoreApp.envSettings` reactive var.
 
-## Configuration
-
-The package's behavior can be configured through a call to the `CoreApp.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
-
-Known configuration options are:
-
-- `adminRole`
-
-    Define the name of the **application administrator** role.
-
-    Default to 'APP_ADMINISTRATOR'.
-
-    As a reminder, this same value is expected to be also configured in the `pwix:startup-app-admin` package.
-
-- `layout`
-
-    Define the name of the default layout for a page which doesn't define it.
-
-    Default to 'app'.
-
-    This layout is expected to be provided by the application.
-
-- `routePrefix`
-
-    Define the prefix of the routes to be used in provided links.
-
-    Default to `/coreUI`.
-
-- `classes`
-
-    A list of classes to be added to display units.
-
-    Default to `[ 't-page' ]`.
-
-- `verbosity`
-
-    Define the expected verbosity level.
-
-    The accepted value can be any or-ed combination of following:
-
-    - `CoreApp.C.Verbose.NONE`
-
-        Do not display any trace log to the console
-
-    - `CoreApp.C.Verbose.CONFIGURE`
-
-        Trace `CoreApp.configure()` calls and their result
-
-    - `CoreApp.C.Verbose.PAGE`
-
-        Trace changes on page and relevant authorizations
-
-Please note that `CoreApp.configure()` method should be called in the same terms both in client and server sides.
-
-Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `CoreApp.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
-
 ## Provides
 
-`CoreApp` provides following items:
+### `CoreApp`
 
-### `CoreApp.envSettings`
+The exported `CoreApp` global object provides following items:
+
+#### `CoreApp.envSettings`
 
 A ReactiveVar which is set at startup with the settings for this environment. It contains following keys:
 
 - `env`: the name of the running environment from `APP_ENV` environment variable
 - `settings`: the relevant settings read from the APP/private/config/server JSON configuration.
 
-### Methods
+#### Functions
 
-#### `CoreApp.i18n.namespace()`
+##### `CoreApp.i18n.namespace()`
 
 Returns the i18n namespace used by the package. Used to add translations at runtime.
 
@@ -213,21 +159,79 @@ Parameters can be provided:
 
 #### `.x-btn-outline-variant( @color )`
 
+## Configuration
+
+The package's behavior can be configured through a call to the `CoreApp.configure()` method, with just a single javascript object argument, which itself should only contains the options you want override.
+
+Known configuration options are:
+
+- `adminRole`
+
+    Define the name of the **application administrator** role.
+
+    Default to 'APP_ADMINISTRATOR'.
+
+    As a reminder, this same value is expected to be also configured in the `pwix:startup-app-admin` package.
+
+- `layout`
+
+    Define the name of the default layout for a page which doesn't define it.
+
+    Default to 'app'.
+
+    This layout is expected to be provided by the application.
+
+- `routePrefix`
+
+    Define the prefix of the routes to be used in provided links.
+
+    Default to `/coreUI`.
+
+- `classes`
+
+    A list of classes to be added to display units.
+
+    Default to `[ 't-page' ]`.
+
+- `verbosity`
+
+    Define the expected verbosity level.
+
+    The accepted value can be any or-ed combination of following:
+
+    - `CoreApp.C.Verbose.NONE`
+
+        Do not display any trace log to the console
+
+    - `CoreApp.C.Verbose.CONFIGURE`
+
+        Trace `CoreApp.configure()` calls and their result
+
+    - `CoreApp.C.Verbose.PAGE`
+
+        Trace changes on page and relevant authorizations
+
+Please note that `CoreApp.configure()` method should be called in the same terms both in client and server sides.
+
+Remind too that Meteor packages are instanciated at application level. They are so only configurable once, or, in other words, only one instance has to be or can be configured. Addtionnal calls to `CoreApp.configure()` will just override the previous one. You have been warned: **only the application should configure a package**.
+
 ## NPM peer dependencies
 
-Starting with v 0.3.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`. 
+Starting with v 0.1.0, and in accordance with advices from [the Meteor Guide](https://guide.meteor.com/writing-atmosphere-packages.html#peer-npm-dependencies), we no more hardcode NPM dependencies in the `Npm.depends` clause of the `package.js`.
 
 Instead we check npm versions of installed packages at runtime, on server startup, in development environment.
 
 Dependencies as of v 0.3.0:
-```
+
+```js
     '@popperjs/core': '^2.11.6',
     'bootstrap': '^5.2.1',
     'lodash': '^4.17.0'
 ```
 
 Each of these dependencies should be installed at application level:
-```
+
+```sh
     meteor npm install <package> --save
 ```
 
@@ -237,9 +241,11 @@ New and updated translations are willingly accepted, and more than welcome. Just
 
 ## Cookies and comparable technologies
 
-`pwix:core-app` may use `localStorage` to record ...
+None at the moment.
 
-Because this is dynamically done on a per dialog basis, and only on the caller request, the package doesn't advertize of this use, relying on the caller own declaration.
+## Issues & help
+
+In case of support or error, please report your issue request to our [Issues tracker](https://github.com/trychlos/pwix-core-app/issues).
 
 ---
 P. Wieser

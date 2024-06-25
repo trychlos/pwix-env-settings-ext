@@ -183,10 +183,7 @@ export class DisplayUnit extends caBase {
         this.#name = name;
         this.#def = { ...def };
 
-        // be verbose if asked for
-        if( CoreApp.configure().verbosity & CoreApp.C.Verbose.DISPLAY_UNIT ){
-            console.log( 'pwix:core-app defining \''+name+'\' display unit' );
-        }
+        _verbose( CoreApp.C.Verbose.DISPLAY_UNIT, 'pwix:core-app defining \''+name+'\' display unit' );
 
         return this;
     }

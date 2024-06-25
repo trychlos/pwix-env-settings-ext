@@ -173,10 +173,7 @@ export class Page {
         this._name = name;
         this._def = { ...def };
 
-        // be verbose if asked for
-        if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
-            console.log( 'pwix:core-app defining \''+name+'\' page' );
-        }
+        _verbose( CoreApp.C.Verbose.PAGE, 'pwix:core-app defining \''+name+'\' page' );
 
         return this;
     }

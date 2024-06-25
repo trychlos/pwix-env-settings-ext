@@ -41,18 +41,13 @@ export class RunContext extends caBase {
         const self = this;
 
         // initialize the default application title to its name
-        Tracker.autorun(() => {
-            this.title( CoreApp.configure().appName );
-        });
+        this.title( CoreApp.configure().appName );
 
         // an autorun tracker which dynamically tracks the currently connected user
         Tracker.autorun(() => {
             const id = Meteor.userId();
             if( id !== self.#user.get()){
-                // be verbose if asked for
-                if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
-                    console.log( 'pwix:core-app setting \''+id+'\' as current user' );
-                }
+                _verbose( CoreApp.C.Verbose.PAGE, 'pwix:core-app setting \''+id+'\' as current user' );
                 self.#user.set( id );
             }
         });
@@ -62,10 +57,7 @@ export class RunContext extends caBase {
             if( Roles.ready()){
                 const roles = Roles.current();
                 if( !_.isEqual( roles, self.#roles.get())){
-                    // be verbose if asked for
-                    if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
-                        console.log( 'pwix:core-app setting current roles', roles );
-                    }
+                    _verbose( CoreApp.C.Verbose.PAGE, 'pwix:core-app setting current roles', roles );
                     self.#roles.set( roles );
                 }
             }
@@ -86,6 +78,7 @@ export class RunContext extends caBase {
             }
         });
 
+        //console.debug( this );
         return this;
     }
 

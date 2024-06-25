@@ -7,8 +7,9 @@ CoreApp.C = {
     Verbose: {
         NONE: 0,
         CONFIGURE:      0x01 <<  0,
-        PAGE:           0x01 <<  1, // a synonym for DISPLAY_UNIT
-        DISPLAY_UNIT:   0x01 <<  1
+        FUNCTIONS:      0x01 <<  1,
+        PAGE:           0x01 <<  2, // a synonym for DISPLAY_UNIT
+        DISPLAY_UNIT:   0x01 <<  2
     }
 };
 

@@ -41,14 +41,16 @@ export class RunContext extends caBase {
         const self = this;
 
         // initialize the default application title to its name
-        this.title( CoreApp._conf.appName );
+        Tracker.autorun(() => {
+            this.title( CoreApp.configure().appName );
+        });
 
         // an autorun tracker which dynamically tracks the currently connected user
         Tracker.autorun(() => {
             const id = Meteor.userId();
             if( id !== self.#user.get()){
                 // be verbose if asked for
-                if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
                     console.log( 'pwix:core-app setting \''+id+'\' as current user' );
                 }
                 self.#user.set( id );
@@ -61,7 +63,7 @@ export class RunContext extends caBase {
                 const roles = Roles.current();
                 if( !_.isEqual( roles, self.#roles.get())){
                     // be verbose if asked for
-                    if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                    if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
                         console.log( 'pwix:core-app setting current roles', roles );
                     }
                     self.#roles.set( roles );

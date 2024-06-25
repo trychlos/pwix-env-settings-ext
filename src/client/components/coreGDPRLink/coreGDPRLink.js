@@ -12,7 +12,7 @@ Template.coreGDPRLink.helpers({
 
     // the route
     route(){
-        return this.route || ( CoreApp._conf.routePrefix || '' )+'/gdpr';
+        return this.route || ( CoreApp.configure().routePrefix || '' )+'/gdpr';
     },
 
     // the title

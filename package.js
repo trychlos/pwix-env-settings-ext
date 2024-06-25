@@ -78,11 +78,9 @@ function configure( api ){
     _use( 'reactive-dict' );
     _use( 'reactive-var' );
     _use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
+    _use( 'tracker' );
     //_use( 'tracker', 'client' );
     api.addFiles( 'src/client/components/coreCookiesLink/coreCookiesLink.js', 'client' );
-    api.addFiles( 'src/client/components/coreErrorMsg/coreErrorMsg.js', 'client' );
-    api.addFiles( 'src/client/components/coreFieldCheckIndicator/coreFieldCheckIndicator.js', 'client' );
-    api.addFiles( 'src/client/components/coreFieldTypeIndicator/coreFieldTypeIndicator.js', 'client' );
     api.addFiles( 'src/client/components/coreGDPRLink/coreGDPRLink.js', 'client' );
     api.addFiles( 'src/client/components/coreGTULink/coreGTULink.js', 'client' );
     api.addFiles( 'src/client/components/coreLegalsLink/coreLegalsLink.js', 'client' );

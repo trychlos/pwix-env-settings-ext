@@ -3,9 +3,9 @@
  *
  * This class manages the currently displayed page as a singleton object, which acts as a reactive datasource.
  * It updates itself each time the route changes.
- * 
+ *
  * Permission returned here are relative to the current user, and are all reactive.
- * 
+ *
  * This class is designed so that the application can directly instanciate it, or may also derive it to build its own derived class.
  */
 
@@ -68,7 +68,7 @@ export class PageCurrent {
             const id = Meteor.userId();
             if( id !== this._vars.user ){
                 // be verbose if asked for
-                if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
                     console.log( 'pwix:core-app setting \''+id+'\' as current user' );
                 }
                 this._vars.user = id;
@@ -82,7 +82,7 @@ export class PageCurrent {
                 const roles = Roles.current();
                 if( !_.isEqual( roles, this._vars.roles )){
                     // be verbose if asked for
-                    if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                    if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
                         console.log( 'pwix:core-app setting current roles', roles );
                     }
                     this._vars.roles = roles;
@@ -114,13 +114,13 @@ export class PageCurrent {
             if( page instanceof Page ){
                 if( !this._vars.page || page.name() !== this._vars.page.name()){
                     // be verbose if asked for
-                    if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                    if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
                         console.log( 'pwix:core-app setting current page', page.name());
                     }
                     this._vars.page = page;
                     this._vars.dep.changed();
 
-                } else if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+                } else if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
                     console.log( 'pwix:core-app ignoring already set page', page.name());
                 }
             } else {

@@ -3,35 +3,35 @@
  *
  * This class manages a defined page.
  * Only a non-empty name is mandatory. All other fields are free, and up to the application.
- * 
+ *
  * Known keys are:
- * 
+ *
  *  - name
  *                      Type: String
  *                      MANDATORY (no default).
- * 
+ *
  *  - inMenus
  *                      Definition type: String or Array of strings
  *                      Returned type: Array of strings
  *                      The menus names in which this page may appear as an item.
  *                      No default.
- * 
+ *
  *  - menuIcon
  *                      Type: String
  *                      The name of the FontAwesome icon to be used in front of the menu label.
  *                      Defaulting to 'fa-chevron-right' as configured.
- * 
+ *
  *  - menuLabel
  *                      Type: String
  *                      The I18n translation key for the menu label.
  *                      No default.
- * 
+ *
  *  - rolesAccess
  *                      Definition type: String or Array of strings
  *                      Returned type: Array of strings
  *                      The role(s) needed to just have access to this page.
  *                      Defaulting to public access if no role is specified.
- * 
+ *
  *  - rolesEdit
  *                      Definition type: String or Array of strings
  *                      Returned type: Array of strings
@@ -41,28 +41,28 @@
  *  - route
  *                      the route to the page
  *                      MANDATORY (no default): without this option, the page is inaccessible.
- * 
+ *
  *  - template
  *                      Type: String
  *                      The template to be loaded
  *                      MANDATORY (no default): without this option, the page is just not rendered.
- * 
+ *
  *  - templateParms
  *                      Type: Object
  *                      Parameters to be passed to the template, defaulting to none.
- * 
+ *
  *  - theme
  *                      Type: String
  *                      The theme to be applied.
  *                      Defaulting to 't-page' as configured.
- * 
+ *
  *  - wantEditionSwitch
  *                      Whether we want a 'edit now' toggle switch on the top of the page
  *                      Defaulting to false.
- * 
+ *
  * Please note that - after a try - we have decided to NOT use SimpleSchema to validate the provided definition.
  * Main reason is that it is difficult (or at least not documented) to use a longhand definition when type is either a string or an array of strings.
- * 
+ *
  * This class is designed so that the application can directly instanciate it, or may also derive it to build its own derived class.
  */
 
@@ -160,21 +160,21 @@ export class Page {
         check( name, String );
 
         this._checkStringOrArray( def, 'inMenus', [] );
-        this._checkString( def, 'menuIcon', CoreApp._conf.menuIcon );
+        this._checkString( def, 'menuIcon', CoreApp.configure().menuIcon );
         this._checkString( def, 'menuLabel' );
         this._checkStringOrArray( def, 'rolesAccess', [] );
-        this._checkStringOrArray( def, 'rolesEdit', [ CoreApp._conf.adminRole ] );
+        this._checkStringOrArray( def, 'rolesEdit', [ CoreApp.configure().adminRole ] );
         this._checkString( def, 'route' );
         this._checkString( def, 'template' );
         this._checkObjectOrFunction( def, 'templateParms' );
-        this._checkString( def, 'theme', CoreApp._conf.theme );
+        this._checkString( def, 'theme', CoreApp.configure().theme );
         this._checkBoolean( def, 'wantEditionSwitch', false );
 
         this._name = name;
         this._def = { ...def };
-    
+
         // be verbose if asked for
-        if( CoreApp._conf.verbosity & CoreApp.C.Verbose.PAGE ){
+        if( CoreApp.configure().verbosity & CoreApp.C.Verbose.PAGE ){
             console.log( 'pwix:core-app defining \''+name+'\' page' );
         }
 

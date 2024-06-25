@@ -15,7 +15,7 @@ Template.coreCookiesLink.helpers({
 
     // the route
     route(){
-        return this.route || ( CoreApp._conf.routePrefix || '' )+'/cookies';
+        return this.route || ( CoreApp.configure().routePrefix || '' )+'/cookies';
     },
 
     // the title

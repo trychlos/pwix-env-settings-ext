@@ -4,7 +4,10 @@
 
 import _ from 'lodash';
 
-CoreApp._conf = {};
+import { ReactiveVar } from 'meteor/reactive-var';
+
+let _conf = {};
+CoreApp._conf = new ReactiveVar( _conf );
 
 CoreApp._defaults = {
     appName: null,
@@ -23,15 +26,17 @@ CoreApp._defaults = {
  */
 CoreApp.configure = function( o ){
     if( o && _.isObject( o )){
-        _.merge( CoreApp._conf, CoreApp._defaults, o );
+        _.merge( _conf, CoreApp._defaults, o );
+        CoreApp._conf.set( _conf );
         // be verbose if asked for
-        if( CoreApp._conf.verbosity & CoreApp.C.Verbose.CONFIGURE ){
+        if( _conf.verbosity & CoreApp.C.Verbose.CONFIGURE ){
             //console.log( 'pwix:core-app configure() with', o, 'building', CoreApp._conf );
             console.log( 'pwix:core-app configure() with', o );
         }
     }
     // also acts as a getter
-    return CoreApp._conf;
+    return CoreApp._conf.get();
 }
 
-_.merge( CoreApp._conf, CoreApp._defaults );
+_.merge( _conf, CoreApp._defaults );
+CoreApp._conf.set( _conf );

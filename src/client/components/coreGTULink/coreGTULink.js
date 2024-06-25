@@ -15,7 +15,7 @@ Template.coreGTULink.helpers({
 
     // the route
     route(){
-        return this.route || ( CoreApp._conf.routePrefix || '' )+'/gtu';
+        return this.route || ( CoreApp.configure().routePrefix || '' )+'/gtu';
     },
 
     // the title

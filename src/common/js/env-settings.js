@@ -16,12 +16,12 @@ import { EnvSettings } from 'meteor/pwix:env-settings';
  */
 CoreApp.onEnvSettingsReady = function(){
     // this CoreApp must have been configured with the application name
-    check( CoreApp._conf.appName, String );
+    check( CoreApp.configure().appName, String );
 
     const env = Meteor.settings.public.runtime.env;
-    const settings = Meteor.settings[CoreApp._conf.appName].environments[env];
+    const settings = Meteor.settings[CoreApp.configure().appName].environments[env];
     // copy to the client the environment context
-    Meteor.settings.public[CoreApp._conf.appName].environment = settings;
+    Meteor.settings.public[CoreApp.configure().appName].environment = settings;
     console.debug( 'pwix:env-settings.onReady() environment settings copied to public object' );
 
     // let the environment settings override part of the default package configuration provided by the application for this particular environment

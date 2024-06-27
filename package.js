@@ -65,6 +65,7 @@ function configure( api ){
     _use( 'pwix:roles@1.3.0' );
     // level 3
     _use( 'pwix:accounts-ui@1.5.0' );
+    _use( 'pwix:date-input@1.0.0' );
     _use( 'pwix:modal-info@1.4.4' );
     // level 4
     //_use( 'pwix:collections-manager@0.10.0' );

@@ -38,6 +38,7 @@ function configure( api ){
     // level zero
     _use( 'pwix:blaze-layout@2.3.2' );
     _use( 'pwix:collection-behaviours@2.0.0' );
+    _use( 'pwix:date@1.0.0' );
     _use( 'pwix:env-settings@1.6.0 || 2.0.0-rc' );
     _use( 'pwix:i18n@1.5.7' );
     _use( 'pwix:jquery-ui@1.0.3' );

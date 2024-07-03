@@ -22,7 +22,7 @@ CoreApp.onEnvSettingsReady = function(){
     const settings = Meteor.settings[CoreApp.configure().appName].environments[env];
     // copy to the client the environment context
     Meteor.settings.public[CoreApp.configure().appName].environment = settings;
-    console.debug( 'pwix:env-settings.onReady() environment settings copied to public object' );
+    console.debug( 'pwix:core-app.onEnvSettingsReady() environment settings copied to public object' );
 
     // let the environment settings override part of the default package configuration provided by the application for this particular environment
     // it expects the following hierarchy:

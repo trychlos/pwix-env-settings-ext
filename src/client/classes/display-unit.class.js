@@ -33,12 +33,6 @@
  *                      The I18n translation key for the menu label.
  *                      No default.
  *
- *  - rolesAccess
- *                      Definition type: String or Array of strings
- *                      Returned type: Array of strings
- *                      The role(s) needed to just have access to this page.
- *                      Defaulting to public access if no role is specified.
- *
  *  - rolesEdit
  *                      Definition type: String or Array of strings
  *                      Returned type: Array of strings
@@ -177,12 +171,10 @@ export class DisplayUnit extends Base {
         this._checkStringOrArray( def, 'inMenus', [] );
         this._checkString( def, 'menuIcon', CoreApp.configure().menuIcon );
         this._checkString( def, 'menuLabel' );
-        this._checkStringOrArray( def, 'rolesAccess', [] );
         this._checkStringOrArray( def, 'rolesEdit', [ CoreApp.configure().adminRole ] );
         this._checkString( def, 'route' );
         this._checkString( def, 'template' );
         this._checkObjectOrFunction( def, 'templateParms' );
-        this._checkStringOrArray( def, 'rolesAccess', [] );
         this._checkString( def, 'wantPermission' );
 
         this.#name = name;
@@ -212,8 +204,8 @@ export class DisplayUnit extends Base {
     /**
      * @returns {Boolean} with value=true if the current page is scoped.
      *  A page is said 'scoped':
-     *  - if it is qualified with 'wantScope=true' in the pages definition (/imports/client/init/pages.js)
-     *  - or if one of the AccessRoles it requires is itself scoped (qualified as such in the roles hierarchy definition)
+     *  - if it is qualified with 'wantScope=true' in the display units definition
+     *  - or if one of the permissions it requires is itself scoped (qualified as such in the roles hierarchy definition)
      *  - or if the roleAssignment of this role for this user is itself scoped
      */
     wantScope(){
@@ -221,12 +213,14 @@ export class DisplayUnit extends Base {
             return true;
         }
         let wantScope = false;
+        /*
         this.get( 'rolesAccess' ).every(( role ) => {
             if( Roles.isRoleScoped( role )){
                 wantScope = true;
                 return !wantScope;
             }
         });
+        */
         return wantScope;
     }
 }

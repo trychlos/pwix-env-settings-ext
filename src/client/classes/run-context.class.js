@@ -4,7 +4,6 @@
 
 import _ from 'lodash';
 
-import { FlowRouter } from 'meteor/ostrio:flow-router-extra';
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 import { Tracker } from 'meteor/tracker';
@@ -63,14 +62,6 @@ export class RunContext extends Base {
             }
         });
 
-        // an autorun tracker which redirect to home page if user is not habilited to this one
-        Tracker.autorun(() => {
-            if( self.#page.get() && !self.accessAllowed()){
-                console.log( 'Page', self.#page.get() || '(null)', 'not allowed, redirecting to \'/\'' );
-                FlowRouter.redirect( '/' );
-            }
-        });
-
         // an autorun tracker reset the editionAsked reactive var each time the user logs out
         Tracker.autorun(() => {
             if( !Meteor.userId()){
@@ -80,25 +71,6 @@ export class RunContext extends Base {
 
         //console.debug( this );
         return this;
-    }
-
-    /**
-     * @returns {Boolean} whether the access is allowed to the user for the page
-     *  Reactive method
-     */
-    accessAllowed(){
-        const page = this.#page.get();
-        if( page ){
-            check( page, DisplayUnit );
-            const rolesAccess = page.get( 'rolesAccess' );
-            if( !rolesAccess.length ){
-                return true;
-            }
-            if( Roles.ready()){
-                return Roles.userIsInRoles( this.#user.get(), rolesAccess, { anyScope: true });
-            }
-        }
-        return false;
     }
 
     /**

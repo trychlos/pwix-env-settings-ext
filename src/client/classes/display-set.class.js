@@ -89,6 +89,7 @@ export class DisplaySet extends Base {
                     allowed.push( pages[i] );
                 }
             }
+            console.debug( 'returning', allowed );
             return allowed;
         });
     }

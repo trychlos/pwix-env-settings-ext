@@ -9,11 +9,11 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 import { Tracker } from 'meteor/tracker';
 
-import { caBase } from '../../common/classes/base.class';
+import { Base } from '../../common/classes/base.class';
 
 import { DisplayUnit } from './display-unit.class';
 
-export class RunContext extends caBase {
+export class RunContext extends Base {
 
     // static data
 

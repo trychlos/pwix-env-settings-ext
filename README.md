@@ -2,22 +2,7 @@
 
 ## What is it ?
 
-A meta-package which embeds our application most common codes, both on client and server sides.
-
-This package:
-
-- is not designed to be published (probably cannot be used in any application)
-- is expected to be added to an application (not required by a package), bringing with it most common dependencies.
-
-It materializes our design decisions about user interface and server code architecture:
-
-- deep copy, deep equal and other Object functions are handled by lodash, and check_npms takes care of requiring it
-- it is Bootstrap-based, so check_npms takes care of requiring @popperjs/core and bootstrap
-- embeds (and provides) latest FontAwesome copy
-- requires pwix:layout package, so that is able to provide responsive layout utilities which adapt to the device
-- provides the Page class to handle pages and routes in an organized way
-- provides the Authorization class to handle permissions
-- requires pwix:modal, pwix:tolert, pwix:bootbox for dialogs management
+A package which provides some core features to our applications.
 
 ## Features
 
@@ -30,28 +15,6 @@ We so use the `APP_ENV` environment variable to address our own environment iden
 The settings are read from the server settings for this environment through the path `Meteor.settings[APP.name].environments[<environment_identifier>]`.
 
 If not specified in the `APP_ENV` variable, the environment identifier falls back to the `nodejs` environment name.
-
-### Layout management
-
-The layout is actually eventually computed from the current page and the current display.
-
-From our point of view:
-
-- `CoreApp` holds a default `l-app` layout, which can be configured.
-
-- Each page define its own layout, though if relies most often on the default layout.
-
-These two steps are display-independant.
-
-### Forms management
-
-`pwix:core-app` provides classes to make easier the forms management.
-
-Each class may be used as is, and can also be derived by the application.
-
-- `CoreApp.FormChecker`
-
-    A class to be instanciated (or derived) by each component which would take advantage of it.
 
 ### Pages management
 
@@ -89,6 +52,12 @@ A ReactiveVar which is set at startup with the settings for this environment. It
 - `settings`: the relevant settings read from the APP/private/config/server JSON configuration.
 
 #### Functions
+
+##### `CoreApp.configure()`
+
+See [below](#configuration).
+
+A reactive data source.
 
 ##### `CoreApp.i18n.namespace()`
 

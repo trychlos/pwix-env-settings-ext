@@ -8,12 +8,15 @@
  */
 
 import _ from 'lodash';
+const assert = require( 'assert' ).strict;
 
-import { caBase } from '../../common/classes/base.class';
+import { check } from 'meteor/check';
+
+import { Base } from '../../common/classes/base.class';
 
 import { DisplayUnit } from './display-unit.class';
 
-export class DisplaySet extends caBase {
+export class DisplaySet extends Base {
 
     // static data
 
@@ -59,6 +62,47 @@ export class DisplaySet extends caBase {
     }
 
     /**
+     * @summary build a list of the display units which are planned to appear in the specified menu
+     * @param {String} menu the name of the menu
+     * @param {Function} isAllowed the (async) permission function
+     * @returns {Array<DisplayUnit>} the ordered list of the allowed display units
+     */
+    async buildMenu( menu, isAllowed ){
+        check( menu, String );
+        check( isAllowed, Function );
+        let pages = [];
+        let promises = [];
+        this.enumerate( async ( name, page ) => {
+            if( page.get( 'inMenus' ).includes( menu )){
+                const wantPermission = page.get( 'wantPermission' );
+                const p = Promise.resolve( !wantPermission || isAllowed( wantPermission ));
+                pages.push( page );
+                promises.push( p );
+            }
+            return true;
+        });
+        let allowed = [];
+        return Promise.allSettled( promises ).then(( res ) => {
+            assert( res.length === pages.length, 'expect res.length === pages.length' );
+            for( let i=0 ; i<pages.length ; ++i ){
+                if( res[i].value ){
+                    allowed.push( pages[i] );
+                }
+            }
+            return allowed;
+        });
+    }
+
+    /**
+     * @summary Find a unit definition by name
+     * @param {String} name
+     * @returns {DisplayUnit} the found definition, or null
+     */
+    byName( name ){
+        return this.#set[name] || null;
+    }
+
+    /**
      * @summary Enumerate the registered DisplayUnit's definitions as provided by the application
      * @param {Function} cb a callback triggered for each unit definition as `cb( name<String>, def<DisplayUnit>, arg<Any> )`
      *  the `cb()` function must return true to continue the enumeration, false to stop it
@@ -73,14 +117,5 @@ export class DisplaySet extends caBase {
                 return cb( key, self.#set[key], arg );
             });
         }
-    }
-
-    /**
-     * @summary Find a unit definition by name
-     * @param {String} name
-     * @returns {DisplayUnit} the found definition, or null
-     */
-    get( name ){
-        return this.#set[name] || null;
     }
 }

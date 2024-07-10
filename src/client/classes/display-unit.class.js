@@ -62,6 +62,10 @@
  *                      Whether we want a 'edit now' toggle switch on the top of the page
  *                      Defaulting to false.
  *
+ *  - wantPermission
+ *                      The name of the permission required to let the current user access (see) the display unit.
+ *                      Defaulting to public access if none is specified.
+ *
  *  - wantScope
  *                      To be set to true if the display unit is built to only manage a single scope.
  *                      Defaulting to false.
@@ -77,9 +81,9 @@ import _ from 'lodash';
 import { check } from 'meteor/check';
 import { Roles } from 'meteor/pwix:roles';
 
-import { caBase } from '../../common/classes/base.class';
+import { Base } from '../../common/classes/base.class';
 
-export class DisplayUnit extends caBase {
+export class DisplayUnit extends Base {
 
     // static data
 
@@ -178,7 +182,8 @@ export class DisplayUnit extends caBase {
         this._checkString( def, 'route' );
         this._checkString( def, 'template' );
         this._checkObjectOrFunction( def, 'templateParms' );
-        this._checkBoolean( def, 'wantEditionSwitch', false );
+        this._checkStringOrArray( def, 'rolesAccess', [] );
+        this._checkString( def, 'wantPermission' );
 
         this.#name = name;
         this.#def = { ...def };

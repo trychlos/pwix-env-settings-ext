@@ -67,7 +67,7 @@ CoreApp.onEnvSettingsReady = function(){
                         }
                         return true;
                     });
-                    console.debug( 'calling', pck, global+'.configure() with', conf );
+                    console.debug( 'pwix:core-app is calling', pck, 'configure() with', conf );
                     Package[pck][global].configure( conf );
                 }
             }

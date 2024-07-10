@@ -4,7 +4,7 @@
  * A base class which does nothing but because '@vestergaard-company/js-mixin' only lets add an interface when extending a class...
  */
 
-export class caBase {
+export class Base {
 
     // static data
 
@@ -18,7 +18,7 @@ export class caBase {
 
     /**
      * Constructor
-     * @returns {caBase}
+     * @returns {Base}
      */
     constructor(){
         return this;

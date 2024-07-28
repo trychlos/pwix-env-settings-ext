@@ -10,7 +10,7 @@ import { Tracker } from 'meteor/tracker';
 
 import { Base } from '../../common/classes/base.class';
 
-import { DisplayUnit } from './display-unit.class';
+//import { DisplayUnit } from './display-unit.class';
 
 export class RunContext extends Base {
 
@@ -27,6 +27,11 @@ export class RunContext extends Base {
     #title = new ReactiveVar( null );
     #user = new ReactiveVar( null );
 
+    // manage app admin at startup (SAA)
+    #saaHavePackage = new ReactiveVar( false );
+    #saaIsPackageReady = new ReactiveVar( false );
+    #saaWantDisplay = new ReactiveVar( false );
+
     // private methods
 
     // public data
@@ -42,6 +47,7 @@ export class RunContext extends Base {
         // initialize the default application title to its name
         this.title( CoreApp.configure().appName );
 
+        /*
         // an autorun tracker which dynamically tracks the currently connected user
         Tracker.autorun(() => {
             const id = Meteor.userId();
@@ -50,7 +56,9 @@ export class RunContext extends Base {
                 self.#user.set( id );
             }
         });
+        */
 
+        /*
         // an autorun tracker which dynamically tracks the roles attributed to the current user
         Tracker.autorun(() => {
             if( Roles.ready()){
@@ -59,6 +67,26 @@ export class RunContext extends Base {
                     _verbose( CoreApp.C.Verbose.PAGE, 'pwix:core-app setting current roles', roles );
                     self.#roles.set( roles );
                 }
+            }
+        });
+        */
+
+        // whether we have the SAA package ?
+        Tracker.autorun(() => {
+            self.#saaHavePackage.set( Package['pwix:startup-app-admin'] !== undefined );
+        });
+
+        // if we have the SAA package, is it ready ?
+        Tracker.autorun(() => {
+            if( self.#saaHavePackage.get()){
+                self.#saaIsPackageReady.set( Package['pwix:startup-app-admin'].SAA.ready());
+            }
+        });
+
+        // if we have the SAA package and it is ready, do we want display it ?
+        Tracker.autorun(() => {
+            if( self.#saaIsPackageReady.get()){
+                self.#saaWantDisplay.set( Package['pwix:startup-app-admin'].SAA.countAdmins.get() === 0 );
             }
         });
 
@@ -98,10 +126,10 @@ export class RunContext extends Base {
      *  Reactive method
      */
     editAllowed(){
-        const user = this.#user.get();
+        const user = Meteor.userId(); //this.#user.get();
         const page = this.#page.get();
         if( Roles.ready() && user && page ){
-            check( page, DisplayUnit );
+            //check( page, DisplayUnit );
             return Roles.userIsInRoles( user, page.get( 'rolesEdit' ), { anyScope: true });
         }
         return false;
@@ -144,10 +172,18 @@ export class RunContext extends Base {
      */
     page( du ){
         if( du ){
-            check( du, DisplayUnit );
+            //check( du, DisplayUnit );
             this.#page.set( du );
         }
         return this.#page.get();
+    }
+
+    /**
+     * Getter
+     * @returns {Boolean} whether we want display the SAA admin creation
+     */
+    saaWantDisplay(){
+        return this.#saaWantDisplay.get();
     }
 
     /**

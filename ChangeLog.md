@@ -7,6 +7,7 @@
     Release date: 
 
     - Remove date.js from this package
+    - Actually check NPMs at startup
 
 ### 1.0.0
 

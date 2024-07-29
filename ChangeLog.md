@@ -6,7 +6,7 @@
 
     Release date: 
 
-    - 
+    - Remove date.js from this package
 
 ### 1.0.0
 

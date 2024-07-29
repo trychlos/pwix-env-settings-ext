@@ -18,10 +18,10 @@ export class RunContext {
 
     #editionAsked = new ReactiveVar( false );
     #dataContext = new ReactiveVar( null );
-    #page = new ReactiveVar( null );
-    #roles = new ReactiveVar( null );
+    //#page = new ReactiveVar( null );
+    //#roles = new ReactiveVar( null );
     #title = new ReactiveVar( null );
-    #user = new ReactiveVar( null );
+    //#user = new ReactiveVar( null );
 
     // manage app admin at startup (SAA)
     #saaHavePackage = new ReactiveVar( false );
@@ -122,7 +122,7 @@ export class RunContext {
      */
     editAllowed(){
         const user = Meteor.userId(); //this.#user.get();
-        const page = this.#page.get();
+        const page = this.ipageablePage();
         if( Roles.ready() && user && page ){
             //check( page, DisplayUnit );
             return Roles.userIsInRoles( user, page.get( 'rolesEdit' ), { anyScope: true });
@@ -165,6 +165,7 @@ export class RunContext {
      * @param {DisplayUnit} du
      * @returns {DisplayUnit} the current DisplayUnit page
      */
+    /*
     page( du ){
         if( du ){
             //check( du, DisplayUnit );
@@ -172,6 +173,7 @@ export class RunContext {
         }
         return this.#page.get();
     }
+        */
 
     /**
      * Getter

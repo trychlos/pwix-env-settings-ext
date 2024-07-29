@@ -14,7 +14,6 @@ CoreApp._defaults = {
     adminRole: 'APP_ADMINISTRATOR',
     menuIcon: 'fa-chevron-right',
     routePrefix: '/coreApp',
-    classes: [ 't-page' ],
     verbosity: CoreApp.C.Verbose.CONFIGURE
 };
 

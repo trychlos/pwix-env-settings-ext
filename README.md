@@ -173,12 +173,6 @@ Known configuration options are:
 
     Default to `/coreUI`.
 
-- `classes`
-
-    A list of classes to be added to display units.
-
-    Default to `[ 't-page' ]`.
-
 - `verbosity`
 
     Define the expected verbosity level.

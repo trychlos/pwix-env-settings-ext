@@ -6,8 +6,6 @@ import _ from 'lodash';
 import mix from '@vestergaard-company/js-mixin';
 
 import { ReactiveVar } from 'meteor/reactive-var';
-import { Roles } from 'meteor/pwix:roles';
-import { Tracker } from 'meteor/tracker';
 
 import { Base } from './base.class.js';
 
@@ -21,7 +19,6 @@ export class RunContext extends mix( Base ).with( IAppSaa ){
 
     // private data
 
-    #editionAsked = new ReactiveVar( false );
     #dataContext = new ReactiveVar( null );
     #title = new ReactiveVar( null );
 
@@ -39,13 +36,6 @@ export class RunContext extends mix( Base ).with( IAppSaa ){
 
         // initialize the default application title to its name
         this.title( CoreApp.configure().appName );
-
-        // an autorun tracker reset the editionAsked reactive var each time the user logs out
-        Tracker.autorun(() => {
-            if( !Meteor.userId()){
-                self.editionAsked( false );
-            }
-        });
 
         //console.debug( this );
         return this;
@@ -69,38 +59,6 @@ export class RunContext extends mix( Base ).with( IAppSaa ){
             this.#dataContext.set( o );
         }
         return this.#dataContext.get();
-    }
-
-    /**
-     * @returns {Boolean} whether edition is allowed to the user for the page
-     *  Reactive method
-     */
-    editAllowed(){
-        const user = Meteor.userId(); //this.#user.get();
-        const page = this.ipageablePage();
-        if( Roles.ready() && user && page ){
-            //check( page, DisplayUnit );
-            return Roles.userIsInRoles( user, page.get( 'rolesEdit' ), { anyScope: true });
-        }
-        return false;
-    }
-
-    /**
-     * Getter/Setter
-     * @summary
-     *  Edition management
-     *  The application use db-stored documents and manage there its translations
-     *  Documents can be edited online in dev environment
-     * @param {Boolean} b the optional 'asked' status, i.e. whether the used has asked for editing the current page
-     * @returns {Boolean} the current asked edition status
-     */
-    editionAsked( b ){
-        if( b === true || b === false ){
-            check( b, Boolean );
-            //console.debug( 'editionAsked', b );
-            this.#editionAsked.set( b );
-        }
-        return this.#editionAsked.get();
     }
 
     /**

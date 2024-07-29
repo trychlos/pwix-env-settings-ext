@@ -2,58 +2,9 @@
 
 ## What is it ?
 
-A package which provides some core features to our applications.
+This package provides a `RunContext` class to the application.
 
-## Features
-
-### Page management
-
-A core feature of any application is to display pages to the users, to propose menus, maybe to use modal dialogs to provide informations or let the user enter datas.
-
-`pwix:core-app` try to take in charge the common code, for example the user is he allowed to access the required display unit, is he allowed to enter data in it, and so on.
-
-Pages collection as obviously described by the application, and the current run context, are both materialized by classes that the application may (and even should) derive:
-
-- `CoreApp.RunContext`
-
-### Application administrator
-
-An application may need a _super user_, a user who is allowed to modify some special configuration settings, or to do anything... The `pwix:startup-app-admin` package, when installed in an application, provides the code needed to define this application administrator, verify his/her email address, attribute required role.
-
-To take advantage of this feature, the application must:
-
-- install the required package:
-
-```sh
-    meteor add pwix:startup-app-admin
-```
-
-- configure this package to take advantage of it:
-
-```js
-    CoreApp.configure({
-        withStartupAppAdmin: true
-    });
-```
-
-When these two conditions are met, a reactive data source is 
-
-
-+++++++++++++++++++++++++
-
-### Environment management
-
-While `nodejs` defines only three environments (`development`, `staging` and `production`), and though Meteor has followed the same route, we strongly believe that many more would be better, and that we should not be tied to such only three parts.
-
-We so use the `APP_ENV` environment variable to address our own environment identifier. Through this identifier, we ask the server to publish the setings recorded inside of its private settings (see `pwix:env-settings`).
-
-The settings are read from the server settings for this environment through the path `Meteor.settings[APP.name].environments[<environment_identifier>]`.
-
-If not specified in the `APP_ENV` variable, the environment identifier falls back to the `nodejs` environment name.
-
-### Settings management
-
-`pwix:core-app` the settings dedicated to the current environment as the `CoreApp.envSettings` reactive var.
+The provided class inherits from `IAppSaa` interface, and make the management of `pwix:startup-app-admin` easier and more generic.
 
 ## Provides
 
@@ -61,12 +12,11 @@ If not specified in the `APP_ENV` variable, the environment identifier falls bac
 
 The exported `CoreApp` global object provides following items:
 
-#### `CoreApp.envSettings`
+#### Classes
 
-A ReactiveVar which is set at startup with the settings for this environment. It contains following keys:
+##### `CoreApp.RunContext`
 
-- `env`: the name of the running environment from `APP_ENV` environment variable
-- `settings`: the relevant settings read from the APP/private/config/server JSON configuration.
+A class to beinstanciated by the application.
 
 #### Functions
 

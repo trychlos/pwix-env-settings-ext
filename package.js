@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:core-app',
-    version: '1.0.0',
+    version: '1.0.1-rc',
     summary: 'Meteor RunContext application core class',
     git: 'https://github.com/trychlos/pwix-core-app.git',
     documentation: 'README.md'

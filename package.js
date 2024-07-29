@@ -1,7 +1,7 @@
 Package.describe({
     name: 'pwix:core-app',
     version: '1.0.0-rc',
-    summary: 'Bootstrap-based core package for SPA/Web applications',
+    summary: 'Meteor RunContext application core class',
     git: 'https://github.com/trychlos/pwix-core-app.git',
     documentation: 'README.md'
 });

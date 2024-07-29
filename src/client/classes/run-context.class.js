@@ -1,14 +1,19 @@
 /*
- * /src/client/classes/run-context.class.js
+ * pwix:core-app/src/client/classes/run-context.class.js
  */
 
 import _ from 'lodash';
+import mix from '@vestergaard-company/js-mixin';
 
 import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 import { Tracker } from 'meteor/tracker';
 
-export class RunContext {
+import { Base } from './base.class.js';
+
+import { IAppSaa } from '../interfaces/iapp-saa.iface.js';
+
+export class RunContext extends mix( Base ).with( IAppSaa ){
 
     // static data
 
@@ -18,15 +23,7 @@ export class RunContext {
 
     #editionAsked = new ReactiveVar( false );
     #dataContext = new ReactiveVar( null );
-    //#page = new ReactiveVar( null );
-    //#roles = new ReactiveVar( null );
     #title = new ReactiveVar( null );
-    //#user = new ReactiveVar( null );
-
-    // manage app admin at startup (SAA)
-    #saaHavePackage = new ReactiveVar( false );
-    #saaIsPackageReady = new ReactiveVar( false );
-    #saaWantDisplay = new ReactiveVar( false );
 
     // private methods
 
@@ -36,54 +33,12 @@ export class RunContext {
      * Constructor
      * @returns {RunContext} this instance
      */
-    constructor( o ){
+    constructor(){
+        super( ...arguments );
         const self = this;
 
         // initialize the default application title to its name
         this.title( CoreApp.configure().appName );
-
-        /*
-        // an autorun tracker which dynamically tracks the currently connected user
-        Tracker.autorun(() => {
-            const id = Meteor.userId();
-            if( id !== self.#user.get()){
-                _verbose( CoreApp.C.Verbose.PAGE, 'pwix:core-app setting \''+id+'\' as current user' );
-                self.#user.set( id );
-            }
-        });
-        */
-
-        /*
-        // an autorun tracker which dynamically tracks the roles attributed to the current user
-        Tracker.autorun(() => {
-            if( Roles.ready()){
-                const roles = Roles.current();
-                if( !_.isEqual( roles, self.#roles.get())){
-                    _verbose( CoreApp.C.Verbose.PAGE, 'pwix:core-app setting current roles', roles );
-                    self.#roles.set( roles );
-                }
-            }
-        });
-        */
-
-        // whether we have the SAA package ?
-        Tracker.autorun(() => {
-            self.#saaHavePackage.set( Package['pwix:startup-app-admin'] !== undefined );
-        });
-
-        // if we have the SAA package, is it ready ?
-        Tracker.autorun(() => {
-            if( self.#saaHavePackage.get()){
-                self.#saaIsPackageReady.set( Package['pwix:startup-app-admin'].SAA.ready());
-            }
-        });
-
-        // if we have the SAA package and it is ready, do we want display it ?
-        Tracker.autorun(() => {
-            if( self.#saaIsPackageReady.get()){
-                self.#saaWantDisplay.set( Package['pwix:startup-app-admin'].SAA.countAdmins.get() === 0 );
-            }
-        });
 
         // an autorun tracker reset the editionAsked reactive var each time the user logs out
         Tracker.autorun(() => {
@@ -154,33 +109,6 @@ export class RunContext {
      */
     isConnected(){
         return Meteor.userId() !== null;
-    }
-
-    /**
-     * Getter/Setter
-     * @summary
-     *  A reactive tracker of the currently displayed page as a DisplayUnit is installed in the derived class constructor.s
-     *  This has to be run from the application as only the application knows what is exactly in the page data context.
-     *  Note: the currently displayed page may not be the currently displayed DisplayUnit if this later, for example, is a modal on top of the page.
-     * @param {DisplayUnit} du
-     * @returns {DisplayUnit} the current DisplayUnit page
-     */
-    /*
-    page( du ){
-        if( du ){
-            //check( du, DisplayUnit );
-            this.#page.set( du );
-        }
-        return this.#page.get();
-    }
-        */
-
-    /**
-     * Getter
-     * @returns {Boolean} whether we want display the SAA admin creation
-     */
-    saaWantDisplay(){
-        return this.#saaWantDisplay.get();
     }
 
     /**

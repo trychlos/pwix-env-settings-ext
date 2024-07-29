@@ -12,12 +12,6 @@
 | ---: | :---       | :---                       |
 |    9 | 2023- 9- 6 | Integrate legals, cgu, personal policy as templates + relevant links |
 |   11 | 2023- 9-28 | env-settings: package configuration is re-run when language changes - why? |
-|   14 | 2023-12-16 | PageCurrent. editAllowed() accessAllowed() should be able to take functions as arguments |
-|   15 | 2023-12-16 | have a component able to build a menu from allowed pages ? |
-|   17 | 2024- 1-12 | TabbedTemplate: the application should be allowed to block a pane change, even if the user changes the route or select another tab of another TabbedTemplate |
-|      |            | or anything else - use case: prevent losing unsaved changes on a pane |
-|   18 | 2024- 1-13 | FormChecker doesn't work for radio buttons |
-|   19 | 2024- 1-19 | namespace all triggered events (see https://api.jquery.com/on/) |
 |   20 |  |  |
 
 ---
@@ -45,8 +39,19 @@
 |      | 2023- 9-28 | done |
 |   12 | 2023-12-16 | rename package to CoreAPP as there is not only a UI here |
 |      | 2024- 1- 5 | done |
+|   14 | 2023-12-16 | PageCurrent. editAllowed() accessAllowed() should be able to take functions as arguments |
+|      | 2024- 7-29 | moved to pwix:app-pages and pwix:app-edit packages |
+|   15 | 2023-12-16 | have a component able to build a menu from allowed pages ? |
+|      | 2024- 7-29 | cancelled |
 |   16 | 2023-12-19 | after having integrated yesno_select, remove FormChecked corresponding bad hack |
 |      | 2023-12-19 | done |
+|   17 | 2024- 1-12 | TabbedTemplate: the application should be allowed to block a pane change, even if the user changes the route or select another tab of another TabbedTemplate |
+|      |            | or anything else - use case: prevent losing unsaved changes on a pane |
+|      | 2024- 7-29 | moved to pwix:tabbed package |
+|   18 | 2024- 1-13 | FormChecker doesn't work for radio buttons |
+|      | 2024- 7-29 | moved to pwix:forms package |
+|   19 | 2024- 1-19 | namespace all triggered events (see https://api.jquery.com/on/) |
+|      | 2024- 7-29 | cancelled |
 
 ---
 P. Wieser

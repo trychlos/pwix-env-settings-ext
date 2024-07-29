@@ -8,11 +8,7 @@ import { ReactiveVar } from 'meteor/reactive-var';
 import { Roles } from 'meteor/pwix:roles';
 import { Tracker } from 'meteor/tracker';
 
-import { Base } from '../../common/classes/base.class';
-
-//import { DisplayUnit } from './display-unit.class';
-
-export class RunContext extends Base {
+export class RunContext {
 
     // static data
 
@@ -41,7 +37,6 @@ export class RunContext extends Base {
      * @returns {RunContext} this instance
      */
     constructor( o ){
-        super( ...arguments );
         const self = this;
 
         // initialize the default application title to its name

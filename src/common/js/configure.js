@@ -12,7 +12,6 @@ CoreApp._conf = new ReactiveVar( _conf );
 CoreApp._defaults = {
     appName: null,
     adminRole: 'APP_ADMINISTRATOR',
-    menuIcon: 'fa-chevron-right',
     routePrefix: '/coreApp',
     verbosity: CoreApp.C.Verbose.CONFIGURE
 };

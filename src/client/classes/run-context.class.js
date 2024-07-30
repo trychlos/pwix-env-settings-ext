@@ -62,14 +62,6 @@ export class RunContext extends mix( Base ).with( IAppSaa ){
     }
 
     /**
-     * Getter
-     * @returns {Boolean} whether a user is currently logged-in
-     */
-    isConnected(){
-        return Meteor.userId() !== null;
-    }
-
-    /**
      * Getter/Setter
      * @summary
      *  The title of the application defaults to its name as the constant `Meteor.APP.name`.

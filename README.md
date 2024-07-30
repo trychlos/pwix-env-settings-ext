@@ -109,19 +109,11 @@ Known configuration options are:
 
     As a reminder, this same value is expected to be also configured in the `pwix:startup-app-admin` package.
 
-- `layout`
-
-    Define the name of the default layout for a page which doesn't define it.
-
-    Default to 'app'.
-
-    This layout is expected to be provided by the application.
-
 - `routePrefix`
 
     Define the prefix of the routes to be used in provided links.
 
-    Default to `/coreUI`.
+    Default to `/coreApp`.
 
 - `verbosity`
 

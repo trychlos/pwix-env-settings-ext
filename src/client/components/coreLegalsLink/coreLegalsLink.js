@@ -2,6 +2,8 @@
  * /src/client/components/coreLegalsLink/coreLegalsLink.js
  */
 
+import { pwixI18n } from 'meteor/pwix:i18n';
+
 import './coreLegalsLink.html';
 
 Template.coreLegalsLink.helpers({

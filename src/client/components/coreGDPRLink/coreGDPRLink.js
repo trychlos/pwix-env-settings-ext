@@ -2,6 +2,8 @@
  * /src/client/components/coreGDPRLink/coreGDPRLink.js
  */
 
+import { pwixI18n } from 'meteor/pwix:i18n';
+
 import './coreGDPRLink.html';
 
 Template.coreGDPRLink.helpers({

@@ -24,7 +24,7 @@ CoreApp._defaults = {
  */
 CoreApp.configure = function( o ){
     if( o && _.isObject( o )){
-        _.merge( _conf, CoreApp._defaults, o );
+        _conf = _.merge( CoreApp._defaults, _conf, o );
         CoreApp._conf.set( _conf );
         // be verbose if asked for
         if( _conf.verbosity & CoreApp.C.Verbose.CONFIGURE ){
@@ -36,5 +36,5 @@ CoreApp.configure = function( o ){
     return CoreApp._conf.get();
 }
 
-_.merge( _conf, CoreApp._defaults );
+_conf = _.merge( {}, CoreApp._defaults );
 CoreApp._conf.set( _conf );

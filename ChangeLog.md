@@ -9,6 +9,7 @@
     - Remove date.js and other obsolete code from this package
     - Actually check NPMs at startup
     - Add pwix:i18n missing dependency
+    - Fix configuration overrides
 
 ### 1.0.0
 

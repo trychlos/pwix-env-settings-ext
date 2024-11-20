@@ -93,4 +93,13 @@ export class RunContext extends mix( Base ).with( IAppSaa ){
     wantHeader(){
         return true;
     }
+
+    /**
+     * Getter
+     * @returns {Boolean} whether we want display a language chooser
+     *  Configured via a setting 'wantLanguageSwitch' boolean value, defaulting to false
+     */
+    wantLanguageSwitch(){
+        return Meteor.settings.public[Meteor.APP.name].environment.wantLanguageSwitch === true;
+    }
 }

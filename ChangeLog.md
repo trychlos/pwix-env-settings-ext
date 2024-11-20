@@ -2,7 +2,7 @@
 
 ## ChangeLog
 
-### 1.0.1-rc
+### 1.1.0-rc
 
     Release date: 
 
@@ -10,6 +10,7 @@
     - Actually check NPMs at startup
     - Add pwix:i18n missing dependency
     - Fix configuration overrides
+    - Define new wantLanguageSwitch() RunContext method, thus bumping minor candidate version number
 
 ### 1.0.0
 

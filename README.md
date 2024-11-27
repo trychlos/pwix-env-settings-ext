@@ -20,7 +20,7 @@ A class to be instanciated by the application.
 
 This class is extended with the IAppSaa interface by the package itself.
 
-It is extended too by the IAppEditable interface with the `pwix:app-edit` package, and by the IAppPageable interface with the `pwix:app-page` package.
+It is extended too by the `IAppEditable` interface with the `pwix:app-edit` package, and by the `IAppPageable` interface with the `pwix:app-pages` package.
 
 #### Functions
 

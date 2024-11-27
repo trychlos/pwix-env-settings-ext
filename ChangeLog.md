@@ -11,6 +11,7 @@
     - Add pwix:i18n missing dependency
     - Fix configuration overrides
     - Define new wantLanguageSwitch() RunContext method, thus bumping minor candidate version number
+    - RunContext instance is now a singleton
 
 ### 1.0.0
 

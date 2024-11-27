@@ -1,5 +1,7 @@
 /*
  * pwix:core-app/src/client/classes/run-context.class.js
+ *
+ * The RunContext instance is a singleton, which is expected to be instanciated by the application.
  */
 
 import _ from 'lodash';
@@ -14,6 +16,7 @@ import { IAppSaa } from '../interfaces/iapp-saa.iface.js';
 export class RunContext extends mix( Base ).with( IAppSaa ){
 
     // static data
+    static singleton = null;
 
     // static methods
 
@@ -31,13 +34,18 @@ export class RunContext extends mix( Base ).with( IAppSaa ){
      * @returns {RunContext} this instance
      */
     constructor(){
+        // manage the singleton, if any
+        if( RunContext.singleton ){
+            return RunContext.singleton;
+        }
+        // instanciation
         super( ...arguments );
         const self = this;
 
         // initialize the default application title to its name
         this.title( CoreApp.configure().appName );
 
-        //console.debug( this );
+        RunContext.singleton = this;
         return this;
     }
 

@@ -11,9 +11,10 @@ import { ReactiveVar } from 'meteor/reactive-var';
 
 import { Base } from './base.class.js';
 
+import { IAppI18n } from '../interfaces/iapp-i18n.iface.js';
 import { IAppSaa } from '../interfaces/iapp-saa.iface.js';
 
-export class RunContext extends mix( Base ).with( IAppSaa ){
+export class RunContext extends mix( Base ).with( IAppI18n, IAppSaa ){
 
     // static data
     static singleton = null;
@@ -100,14 +101,5 @@ export class RunContext extends mix( Base ).with( IAppSaa ){
      */
     wantHeader(){
         return true;
-    }
-
-    /**
-     * Getter
-     * @returns {Boolean} whether we want display a language chooser
-     *  Configured via a setting 'wantLanguageSwitch' boolean value, defaulting to false
-     */
-    wantLanguageSwitch(){
-        return Meteor.settings.public[Meteor.APP.name].environment.wantLanguageSwitch === true;
     }
 }

@@ -12,6 +12,7 @@
     - Fix configuration overrides
     - Define new wantLanguageSwitch() RunContext method, thus bumping minor candidate version number
     - RunContext instance is now a singleton
+    - Introduce new IAppI18n interface and iAppI18nWantSwitch() method replacing wantLanguageSwitch()
 
 ### 1.0.0
 

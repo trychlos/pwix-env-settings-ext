@@ -33,6 +33,7 @@ function configure( api ){
     _use( 'ecmascript' );
     _use( 'less@4.0.0', 'client' );
     _use( 'mongo@1.16.1 || 2.0.0-rc300.2' );
+    _use( 'ostrio:flow-router-extra@3.10.0' );
     _use( 'pwix:env-settings@2.0.0' );
     _use( 'pwix:i18n@1.5.0' );
     _use( 'reactive-dict' );

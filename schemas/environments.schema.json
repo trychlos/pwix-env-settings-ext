@@ -1,0 +1,61 @@
+{
+    "$schema": "https://json-schema.org/draft/2020-12/schema",
+    "$id": "org.trychlos.pwix:core-app/schemas/environments.schema.json",
+    "title": "Environments descriptions",
+    "description_array": [
+        "We describe in 'private/config/server/environments.json' configuration file the per-environment configuration of the application."
+    ],
+    "type": "object",
+    "properties": {
+        "environments": {
+            "description": "The configuration of each environment as an object where keys are the environment identifier.",
+            "type": "object",
+            "patternProperties": {
+                "^.*$": {
+                    "description": "The identifier of the environment, to be addressed by the 'APP_ENV' environment variable on the server.",
+                    "type": "string"
+                }
+            },
+            "properties": {
+                "type": {
+                    "description": "The type of the environment as known by NodeJS.",
+                    "type": "string",
+                    "enum": [
+                        "development",
+                        "staging",
+                        "production"
+                    ]
+                },
+                "contact": {
+                    "description": "An email address to be used in the 'Contact' page as the target of the sent email.",
+                    "type": "string",
+                    "default": "AppContact <no-reply@localhost>"
+                },
+                "private": {
+                    "description_array": [
+                        "While other properties are available to the client via the 'environmentSettings()' function, those described in this object are kept on the server only.",
+                        "They so can include passwords and other sensible data though the maintainer could rather consider the 'maintainer/private/deployments.json' configuration file as addressed by 'meteor.pl deploy' verb."
+                    ],
+                    "type": "object",
+                    "properties": {
+                    }
+                },
+                "sender": {
+                    "description": "The sender email address used when the application sends any email.",
+                    "type": "string",
+                    "default": "AppSender <no-reply@localhost>"
+                },
+                "title": {
+                    "description": "The application title displayed in the header of the application pages.",
+                    "type": "string",
+                    "default": "MyApplication AppLabel"
+                },
+                "wantEditionSwitch": {
+                    "description": "Whether this environment displays an edition switch in the header of the application pages.",
+                    "type": "boolean",
+                    "default": false
+                }
+            }
+        }
+    }
+}

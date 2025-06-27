@@ -9,6 +9,7 @@ import './constants.js';
 import './configure.js';
 import './trace.js';
 //
+import './env-settings.js';
 import './i18n.js';
 
 CoreApp.YesNo = YesNo;

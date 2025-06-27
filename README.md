@@ -2,9 +2,19 @@
 
 ## What is it ?
 
-This package provides a `RunContext` class to the application.
+The `pwix:core-app` package provides a common framework to applications by gathering needed elementary other packages.
 
-The provided class inherits from `IAppSaa` interface, and make the management of `pwix:startup-app-admin` easier and more generic.
+Goal is to be able to initialize a running (though rather empty) application rather quickly, maximizing time to code actual application features.
+
+### pwix:env-settings
+
+`pwix:core-app` extends the `pwix:env-settings` package with some application-level features:
+
+- manage per-environment configuration in a server-side `environments` object, to be addressed by the `APP_ENV` environment variable on the server
+
+- attaches to `EnvSettings` global an `environmentSettings()` async function which returns the current private-filtered environment settings
+
+- manage the reconfiguration of other packages based of got environment settings
 
 ## Provides
 
@@ -17,6 +27,10 @@ The exported `CoreApp` global object provides following items:
 ##### `CoreApp.RunContext`
 
 A class to be instanciated by the application.
+
+This package provides a `RunContext` class to the application.
+
+The provided class inherits from `IAppSaa` interface, and make the management of `pwix:startup-app-admin` easier and more generic.
 
 This class is extended with the IAppSaa interface by the package itself.
 
@@ -107,21 +121,25 @@ Known configuration options are:
 
 - `adminRole`
 
-    Define the name of the **application administrator** role.
+    Defines the name of the **application administrator** role.
 
-    Default to 'APP_ADMINISTRATOR'.
+    Defaults to 'APP_ADMINISTRATOR'.
 
     As a reminder, this same value is expected to be also configured in the `pwix:startup-app-admin` package.
 
+- `appName`
+
+    Defines the name of the application role. By convention, this name MUST also be a key in settings, and contain an `environments` object addressed by the `APP_ENV` environment variable on the server.
+
 - `routePrefix`
 
-    Define the prefix of the routes to be used in provided links.
+    Defines the prefix of the routes to be used in provided links.
 
-    Default to `/coreApp`.
+    Defaults to `/coreApp`.
 
 - `verbosity`
 
-    Define the expected verbosity level.
+    Defines the expected verbosity level.
 
     The accepted value can be any or-ed combination of following:
 

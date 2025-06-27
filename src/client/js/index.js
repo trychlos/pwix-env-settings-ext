@@ -11,3 +11,4 @@ CoreApp.RunContext = RunContext;
 
 // our functions
 import './DOM.js';
+import './routes.js';

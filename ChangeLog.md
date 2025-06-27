@@ -14,6 +14,7 @@
     - RunContext instance is now a singleton
     - Introduce new IAppI18n interface and iAppI18nWantSwitch() method replacing wantLanguageSwitch()
     - Extend pwix:env-settings with environmentSettings() async function
+    - Meteor.APP.name() is now a function which returns the pwix:core-app configured application name
 
 ### 1.0.0
 

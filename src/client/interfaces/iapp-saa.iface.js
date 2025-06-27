@@ -31,7 +31,7 @@ export const IAppSaa = DeclareMixin(( superclass ) => class extends superclass {
             self.#saaIsPackageReady.set( self.#saaHavePackage.get() && Package['pwix:startup-app-admin'].SAA.ready());
         });
 
-        // if we have the SAA package and it is ready, do we want display it ?
+        // if we have the SAA package and it is ready, do we want display the admin creation panel ?
         Tracker.autorun(() => {
             self.#saaWantDisplay.set( self.#saaIsPackageReady.get() && Package['pwix:startup-app-admin'].SAA.countAdmins.get() === 0 );
         });
@@ -41,7 +41,8 @@ export const IAppSaa = DeclareMixin(( superclass ) => class extends superclass {
 
     /**
      * Getter
-     * @returns {Boolean} whether we want display the SAA admin creation
+     * @returns {Boolean} whether we want display the SAA admin creation panel
+     * A reactive data-source
      */
     iAppSaaWantDisplay(){
         return this.#saaWantDisplay.get();

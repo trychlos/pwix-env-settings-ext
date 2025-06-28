@@ -1,9 +1,9 @@
 /*
- * pwix:core-app/src/common/js/trace.js
+ * pwix:env-settings-ext/src/common/js/trace.js
  */
 
 _verbose = function( level ){
-    if( CoreApp.configure().verbosity & level ){
+    if( EnvSettingsExt.configure().verbosity & level ){
         let args = [ ...arguments ];
         args.shift();
         console.debug( ...args );
@@ -11,5 +11,5 @@ _verbose = function( level ){
 };
 
 _trace = function( functionName ){
-    _verbose( CoreApp.C.Verbose.FUNCTIONS, ...arguments );
+    _verbose( EnvSettingsExt.C.Verbose.FUNCTIONS, ...arguments );
 };

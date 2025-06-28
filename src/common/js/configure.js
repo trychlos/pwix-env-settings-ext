@@ -1,5 +1,5 @@
 /*
- * pwix:core-app/src/common/js/configure.js
+ * pwix:env-settings-ext/src/common/js/configure.js
  */
 
 import _ from 'lodash';
@@ -7,13 +7,13 @@ import _ from 'lodash';
 import { ReactiveVar } from 'meteor/reactive-var';
 
 let _conf = {};
-CoreApp._conf = new ReactiveVar( _conf );
+EnvSettingsExt._conf = new ReactiveVar( _conf );
 
-CoreApp._defaults = {
+EnvSettingsExt._defaults = {
     appName: null,
     adminRole: 'APP_ADMINISTRATOR',
-    routePrefix: '/coreApp',
-    verbosity: CoreApp.C.Verbose.CONFIGURE
+    routePrefix: '/EnvSettingsExt',
+    verbosity: EnvSettingsExt.C.Verbose.CONFIGURE
 };
 
 /**
@@ -22,19 +22,16 @@ CoreApp._defaults = {
  * @param {Object} o configuration options
  * @returns {Object} the package configuration
  */
-CoreApp.configure = function( o ){
+EnvSettingsExt.configure = function( o ){
     if( o && _.isObject( o )){
-        _conf = _.merge( CoreApp._defaults, _conf, o );
-        CoreApp._conf.set( _conf );
+        _conf = _.merge( EnvSettingsExt._defaults, _conf, o );
+        EnvSettingsExt._conf.set( _conf );
         // be verbose if asked for
-        if( _conf.verbosity & CoreApp.C.Verbose.CONFIGURE ){
-            //console.log( 'pwix:core-app configure() with', o, 'building', CoreApp._conf );
-            console.log( 'pwix:core-app configure() with', o );
-        }
+        _verbose( EnvSettingsExt.C.Verbose.CONFIGURE, 'configure() with', o );
     }
     // also acts as a getter
-    return CoreApp._conf.get();
+    return EnvSettingsExt._conf.get();
 }
 
-_conf = _.merge( {}, CoreApp._defaults );
-CoreApp._conf.set( _conf );
+_conf = _.merge( {}, EnvSettingsExt._defaults );
+EnvSettingsExt._conf.set( _conf );

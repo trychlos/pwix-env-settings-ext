@@ -1,6 +1,6 @@
 /*
- * pwix:core-app/src/common/js/global.js
+ * pwix:env-settings-ext/src/common/js/global.js
  */
 
-CoreApp = {
+EnvSettingsExt = {
 };

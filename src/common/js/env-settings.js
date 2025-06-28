@@ -1,5 +1,5 @@
 /*
- * pwix:core-app/src/common/js/env-settings.js
+ * pwix:env-settings-ext/src/common/js/env-settings.js
  */
 
 import { EnvSettings } from 'meteor/pwix:env-settings';
@@ -13,15 +13,15 @@ import { Tracker } from 'meteor/tracker';
 
 let _methodDefined = false;
 
-EnvSettings.environmentSettings = async function(){
+EnvSettings.environmentSettings = async function( appName ){
     if( Meteor.isClient ){
-        return Meteor.callAsync( 'env_settings_environment' );
+        return Meteor.callAsync( 'env_settings_environment', appName );
     } else {
         if( !_methodDefined ){
             Meteor.methods({
                 // define a method which let the client calls this function
-                async 'env_settings_environment'(){
-                    return EnvSettings.environmentSettings();
+                async 'env_settings_environment'( appName ){
+                    return EnvSettings.environmentSettings( appName );
                 }
             });
             _methodDefined = true;
@@ -51,7 +51,6 @@ EnvSettings.environmentSettings = async function(){
         let output = undefined;
         Tracker.autorun(() => {
             if( EnvSettings.ready()){
-                const appName = CoreApp.configure().appName;
                 const input = Meteor.settings[appName].environments[Meteor.settings.runtime.env];
                 output = _removePrivateKeys( input );
             }
@@ -62,7 +61,6 @@ EnvSettings.environmentSettings = async function(){
 };
 
 // when EnvSettings is ready, see if we have got some packages to reconfigure
-// honors reconfigurePackages
 // this must be called once from common code
 
 Tracker.autorun(() => {

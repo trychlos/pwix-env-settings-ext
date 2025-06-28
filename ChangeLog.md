@@ -1,24 +1,10 @@
-# pwix:core-app
+# pwix:env-settings-ext
 
 ## ChangeLog
 
-### 1.1.0-rc
+### 1.0.0-rc
 
     Release date: 
-
-    - Remove date.js and other obsolete code from this package
-    - Actually check NPMs at startup
-    - Add pwix:i18n missing dependency
-    - Fix configuration overrides
-    - Define new wantLanguageSwitch() RunContext method, thus bumping minor candidate version number
-    - RunContext instance is now a singleton
-    - Introduce new IAppI18n interface and iAppI18nWantSwitch() method replacing wantLanguageSwitch()
-    - Extend pwix:env-settings with environmentSettings() async function
-    - Meteor.APP.name() is now a function which returns the pwix:core-app configured application name
-
-### 1.0.0
-
-    Release date: 2024- 7-29
 
     - Initial release
 

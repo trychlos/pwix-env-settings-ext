@@ -4,11 +4,11 @@
 
 The `pwix:env-settings-ext` package extends `pwix:env-settings` with some application-level features:
 
-- manage per-environment configuration in a server-side `environments` object, to be addressed by the `APP_ENV` environment variable on the server
+- manage per-environment configuration in a server-side `environments` object, to be addressed by the `APP_ENV` environment variable on the server,
 
-- attaches to `EnvSettings` global an `environmentSettings()` async function which returns the current private-filtered environment settings:
+- attaches to `EnvSettings` global (which is provided by `pwix:env-settings`) a reactive `environmentSettings()` async function which returns the current private-filtered environment settings,
 
-- manage the reconfiguration of other packages based of got environment settings
+- manage the reconfiguration of other packages based of got environment settings.
 
 ## Usage
 
@@ -18,19 +18,9 @@ Install the package with the usual command:
     meteor add pwix:env-settings-ext
 ```
 
+and configure it to address the `environments` object in the settings.
+
 ## Provides
-
-### `EnvSettings`
-
-The `EnvSettings` global object is extended with following items:
-
-#### Functions
-
-##### `EnvSettings.environmentSettings()`
-
-
-
-A reactive data source.
 
 ### `EnvSettingsExt`
 
@@ -50,11 +40,26 @@ The package's behavior can be configured through a call to the `EnvSettingsExt.c
 
 Known configuration options are:
 
-- `environmentKeys`
+- `environmentsKeys`
 
     Defines the list of keys which address the `environments` object inside of the settings.
 
-    As a reminder, this same value is expected to be also configured in the `pwix:startup-app-admin` package.
+    This list of keys can be specified as an array of keys, or as a dot-separated string, or as a mixed of these.
+
+    Example:
+
+```js
+        EnvSettingsExt.configure({
+            environmentsKeys: [
+                'key1',
+                'key2.key3'
+            ]
+        });
+```
+
+    which means that the `environments` object will be addressed as `Meteor.settings[key1][key2][key3].environments`.
+
+    Defaults to none.
 
 - `verbosity`
 
@@ -69,6 +74,16 @@ Known configuration options are:
     - `EnvSettingsExt.C.Verbose.CONFIGURE`
 
         Trace `EnvSettingsExt.configure()` calls and their result
+
+    - `EnvSettingsExt.C.Verbose.SETTINGS`
+
+        Trace the result of calls to `environmentSettings()` function
+
+    - `EnvSettingsExt.C.Verbose.PACKAGES`
+
+        Be verbose when reconfiguring a package based of the got settings
+
+    Defaults to `EnvSettingsExt.C.Verbose.CONFIGURE`.
 
 Please note that `EnvSettingsExt.configure()` method should be called in the same terms both in client and server sides.
 

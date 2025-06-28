@@ -28,10 +28,9 @@ function configure( api ){
         api.imply( ...arguments );
     };
     api.versionsFrom([ '2.9.0', '3.0-rc.0' ]);
-    //_use( 'check' );
     _use( 'pwix:env-settings@2.0.0' );
     _use( 'reactive-var' );
-    //_use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
+    _use( 'tmeasday:check-npm-versions@1.0.2 || 2.0.0-beta.0', 'server' );
     _use( 'tracker' );
 }
 

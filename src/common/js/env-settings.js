@@ -13,15 +13,15 @@ import { Tracker } from 'meteor/tracker';
 
 let _methodDefined = false;
 
-EnvSettings.environmentSettings = async function( appName ){
+EnvSettings.environmentSettings = async function(){
     if( Meteor.isClient ){
-        return Meteor.callAsync( 'env_settings_environment', appName );
+        return Meteor.callAsync( 'env_settings_environment' );
     } else {
         if( !_methodDefined ){
             Meteor.methods({
                 // define a method which let the client calls this function
-                async 'env_settings_environment'( appName ){
-                    return EnvSettings.environmentSettings( appName );
+                async 'env_settings_environment'(){
+                    return EnvSettings.environmentSettings();
                 }
             });
             _methodDefined = true;
@@ -49,13 +49,35 @@ EnvSettings.environmentSettings = async function( appName ){
             return newObj;
         }
         let output = undefined;
+        // a function which returns an array of single keys
+        const _getKeys = function(){
+            let keys = [];
+            const confKeys = EnvSettingsExt.configure().environmentsKeys;
+            if( _.isArray( confKeys )){
+                confKeys.forEach(( it ) => {
+                    keys.push( _getKeysByString( it ));
+                });
+            } else {
+                keys.push( _getKeysByString( confKeys ));
+            }
+            return keys;
+        };
+        // a function which split the dot-separated string
+        const _getKeysByString = function( str ){
+            return str.split( '.' );
+        };
         Tracker.autorun(() => {
             if( EnvSettings.ready()){
-                const input = Meteor.settings[appName].environments[Meteor.settings.runtime.env];
+                let environments = Meteor.settings;
+                const keys = _getKeys();
+                keys.forEach(( it ) => {
+                    environments = environments[it];
+                });
+                const input = environments[Meteor.settings.runtime.env];
                 output = _removePrivateKeys( input );
             }
         });
-		//console.log( "EnvSettings.environmentSettings() returning", output );
+		_verbose( EnvSettingsExt.C.SETTINGS, 'environmentSettings() returns', output );
         return output;
     }
 };
@@ -97,7 +119,7 @@ Tracker.autorun(() => {
                                         }
                                     }
                                 });
-                                EnvSettings.verbose( EnvSettings.C.Verbose.RECONFIGURE, 'calling', pck, 'configure() with', conf );
+                                _verbose( EnvSettingsExt.C.Verbose.PACKAGES, 'calling', pck, 'configure() with', conf );
                                 Package[pck][global].configure( conf );
                             }
                         }

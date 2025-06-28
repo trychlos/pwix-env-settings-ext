@@ -35,7 +35,24 @@
                         ]
                     },
                     "packages": {
-
+                        "description": "the description of which and how packages are to be re-configured for this environment.",
+                        "type": "object",
+                        "patternProperties": {
+                            "^.*$": {
+                                "description": "The name of the package to be reconfigured.",
+                                "type": "string"
+                            }
+                        },
+                        "properties": {
+                            "global": {
+                                "description": "The name of the exported object of the package which contains the 'configure()' function.",
+                                "type": "string"
+                            },
+                            "conf": {
+                                "description": "An object which contains the configuration to be passed to the 'configure()' function.",
+                                "type": "object"
+                            }
+                        }
                     },
                     "private": {
                         "description_array": [

@@ -10,9 +10,7 @@ let _conf = {};
 EnvSettingsExt._conf = new ReactiveVar( _conf );
 
 EnvSettingsExt._defaults = {
-    appName: null,
-    adminRole: 'APP_ADMINISTRATOR',
-    routePrefix: '/EnvSettingsExt',
+    environmentsKeys: null,
     verbosity: EnvSettingsExt.C.Verbose.CONFIGURE
 };
 

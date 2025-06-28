@@ -62,11 +62,6 @@
                         "type": "object",
                         "properties": {
                         }
-                    },
-                    "title": {
-                        "description": "The application title displayed in the header of the application pages.",
-                        "type": "string",
-                        "default": "MyApplication AppLabel"
                     }
                 }
             }

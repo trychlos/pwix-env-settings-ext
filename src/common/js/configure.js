@@ -10,7 +10,7 @@ let _conf = {};
 EnvSettingsExt._conf = new ReactiveVar( _conf );
 
 EnvSettingsExt._defaults = {
-    environmentsKeys: null,
+    environmentsKeys: 'environments',
     verbosity: EnvSettingsExt.C.Verbose.CONFIGURE
 };
 

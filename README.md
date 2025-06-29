@@ -57,9 +57,9 @@ Known configuration options are:
         });
 ```
 
-    which means that the `environments` object will be addressed as `Meteor.settings[key1][key2][key3].environments`.
+    which means that the `environments` object will be addressed as `Meteor.settings[key1][key2][key3]`.
 
-    Defaults to none.
+    Defaults to `environments`: object is addressed as `Meteor.settings.environments`.
 
 - `verbosity`
 

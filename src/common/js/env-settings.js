@@ -2,6 +2,8 @@
  * pwix:env-settings-ext/src/common/js/env-settings.js
  */
 
+import _ from 'lodash';
+
 import { EnvSettings } from 'meteor/pwix:env-settings';
 import { Tracker } from 'meteor/tracker';
 
@@ -52,19 +54,21 @@ EnvSettings.environmentSettings = async function(){
         // a function which returns an array of single keys
         const _getKeys = function(){
             let keys = [];
-            const confKeys = EnvSettingsExt.configure().environmentsKeys;
+            const confKeys = EnvSettingsExt.configure().environmentsKeys || '';
             if( _.isArray( confKeys )){
                 confKeys.forEach(( it ) => {
-                    keys.push( _getKeysByString( it ));
+                    keys = keys.concat( _getKeysByString( it ));
                 });
             } else {
-                keys.push( _getKeysByString( confKeys ));
+                keys = keys.concat( _getKeysByString( confKeys ));
             }
             return keys;
         };
-        // a function which split the dot-separated string
+        // a function which split a dot-separated string
         const _getKeysByString = function( str ){
-            return str.split( '.' );
+            const res = str.split( '.' );
+            //console.debug( 'str', str, 'res', res );
+            return res;
         };
         Tracker.autorun(() => {
             if( EnvSettings.ready()){
@@ -73,11 +77,13 @@ EnvSettings.environmentSettings = async function(){
                 keys.forEach(( it ) => {
                     environments = environments[it];
                 });
-                const input = environments[Meteor.settings.runtime.env];
-                output = _removePrivateKeys( input );
+                if( environments && _.isObject( environments )){
+                    const input = environments[Meteor.settings.runtime.env];
+                    output = _removePrivateKeys( input );
+                }
             }
         });
-		_verbose( EnvSettingsExt.C.SETTINGS, 'environmentSettings() returns', output );
+		_verbose( EnvSettingsExt.C.Verbose.SETTINGS, 'environmentSettings() returns', output );
         return output;
     }
 };

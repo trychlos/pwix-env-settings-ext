@@ -1,6 +1,6 @@
 Package.describe({
     name: 'pwix:env-settings-ext',
-    version: '1.0.0-rc',
+    version: '1.0.0',
     summary: 'A featured extension of pwix:env-settings',
     git: 'https://github.com/trychlos/pwix-env-settings-ext.git',
     documentation: 'README.md'
